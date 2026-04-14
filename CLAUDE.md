@@ -30,7 +30,7 @@ Current phase: **Phase 1 — Curated Reference Documentation**.
 ## 1. Project Identity
 
 - **Name**: coding-agents-tooling
-- **Location**: `/Users/amrambouskila/IMPORTANT/Projects/coding-agents-tooling/`
+- **Location**: `coding-agents-tooling/`
 - **Master plan**: `docs/CODING_AGENTS_TOOLING_MASTER_PLAN.md`
 - **Purpose**: Comprehensive reference and practice guide for Claude Code and OpenAI Codex CLI — architecture, CLI commands, hooks, skills, plugins, MCP, subagents, security, configuration, IDE integration, CI/CD, scheduling, and applied exercises
 - **Target audience**: Senior engineers who use coding agents daily and want to understand every feature surface
