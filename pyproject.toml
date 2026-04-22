@@ -1,0 +1,5 @@
+[project]
+name = "coding-agents-tooling"
+version = "0.0.1"
+description = "Coding agents practice guide — documentation-only project. pyproject.toml exists solely to provide a source-of-truth version field for the release workflow."
+requires-python = ">=3.13"
