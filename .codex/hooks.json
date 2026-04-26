@@ -1,0 +1,44 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "FILEPATH=\"$TOOL_INPUT_FILE_PATH$TOOL_INPUT_file_path\"; case \"$FILEPATH\" in *.env*|*credentials*|*secrets*|*.pem|*.key|*.p12) echo '{\"decision\":\"block\",\"reason\":\"Sensitive file \u2014 requires explicit user confirmation before writing\"}' ;; *) echo '{\"decision\":\"allow\"}' ;; esac",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "FILEPATH=\"$TOOL_INPUT_FILE_PATH$TOOL_INPUT_file_path\"; case \"$FILEPATH\" in *coding-agents-practice-guide*) echo '{\"hookSpecificOutput\":{\"additionalContext\":\"CONTENT RULES: Every feature claim must be verifiable against official docs. Comparative tables must be fair to both agents. No stub sections. Include Mermaid diagrams where they clarify architecture or flow.\"}}' ;; *AGENTS.md|*MASTER_PLAN*) echo '{\"hookSpecificOutput\":{\"additionalContext\":\"PROJECT DOCS: Ensure consistency with docs/status.md and docs/versions.md. Phase constraints must be respected.\"}}' ;; *) echo '{}' ;; esac",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd /Users/amrambouskila/IMPORTANT/Projects/coding-agents-tooling && CHANGES=$(git status --porcelain 2>/dev/null | head -20); if [ -n \"$CHANGES\" ]; then echo \"{\\\"systemMessage\\\":\\\"UNCOMMITTED CHANGES in coding-agents-tooling:\\n$(echo $CHANGES | head -10)\\nRemember: you manage git yourself.\\\"}\"; else echo '{}'; fi",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "echo '{\"systemMessage\":\"SESSION END \u2014 MEMORY REVIEW: Before this session closes, review what was learned and suggest memories the user may want to save. Check ~/.codex/memories/-Users-amrambouskila-IMPORTANT-Projects-coding-agents-tooling/memory/MEMORY.md first to avoid duplicates \u2014 update existing memories rather than creating new ones when the topic already exists. Memory types: user (role, preferences, knowledge), feedback (corrections given, confirmed approaches \u2014 include WHY), project (decisions with external motivation, deadlines, stakeholder context), reference (pointers to external systems). Worth saving: corrections the user gave you, non-obvious approaches they confirmed, project decisions driven by external factors, pointers to external tools/systems, user preferences learned this session. NOT worth saving: anything derivable from code or git history, debugging solutions, ephemeral task details, things already in AGENTS.md. Present a short bulleted list of suggested memories at the end of your response and let the user decide which to save. Memory dir: ~/.codex/memories/-Users-amrambouskila-IMPORTANT-Projects-coding-agents-tooling/memory/\"}'",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}
