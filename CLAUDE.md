@@ -1,5 +1,7 @@
 # Coding Agents Tooling - CLAUDE.md
 
+<mandatory_workflow>
+
 > **MANDATORY WORKFLOW: READ THIS ENTIRE FILE BEFORE EVERY CHANGE.** Every time. No skimming, no assuming prior-session context carries over — it does not.
 >
 > **Why:** This project spans multiple sessions and months of development. Skipping the re-read produces decisions that contradict the architecture, duplicate existing patterns, break data contracts, or introduce tech debt that compounds.
@@ -12,7 +14,11 @@
 > 5. Read the source files you plan to modify — understand existing patterns first.
 > 6. Then implement, following the rules and contracts defined here.
 
+</mandatory_workflow>
+
 ---
+
+<critical_context>
 
 ## 0. Critical Context
 
@@ -25,7 +31,11 @@ This project is NOT:
 
 Current phase: **Phase 1 — Curated Reference Documentation**.
 
+</critical_context>
+
 ---
+
+<project_identity>
 
 ## 1. Project Identity
 
@@ -44,7 +54,11 @@ Current phase: **Phase 1 — Curated Reference Documentation**.
 | 2 | Interactive Exercises & Workshops | Jupyter notebooks or Streamlit app for guided practice | Planned |
 | 3 | Automated Agent Benchmarking | Python CLI tools to score agent performance on standardized tasks | Planned |
 
+</project_identity>
+
 ---
+
+<phase_constraints>
 
 ## 2. Phase 1 Constraints
 
@@ -63,7 +77,11 @@ Phase 1 is documentation-only. The deliverable is `coding-agents-practice-guide.
 - Do NOT add a Dockerfile or docker-compose.yml — not needed until Phase 2+
 - Do NOT add a launcher script — not needed until Phase 2+
 
+</phase_constraints>
+
 ---
+
+<content_rules>
 
 ## 3. Content Rules (Non-Negotiable)
 
@@ -91,7 +109,11 @@ These rules govern all documentation content in this project.
 13. Use `>` blockquotes for important warnings or caveats.
 14. Tables over prose for feature comparisons. Always.
 
+</content_rules>
+
 ---
+
+<inventory>
 
 ## 4. File Inventory
 
@@ -115,7 +137,11 @@ coding-agents-tooling/
 └── .gitignore
 ```
 
+</inventory>
+
 ---
+
+<git_policy>
 
 ## 5. Hands Off Git
 
@@ -126,7 +152,11 @@ When a task is complete, report:
 2. Whether changes form a cohesive commit or should be split.
 3. Suggested commit message (clearly labeled as suggestion).
 
+</git_policy>
+
 ---
+
+<content_verification_protocol>
 
 ## 6. Content Verification Protocol
 
@@ -137,7 +167,11 @@ Before adding or modifying any feature documentation:
 3. **Date-stamp uncertain claims.** If official docs are ambiguous, note the ambiguity.
 4. **Test exercises locally** when possible before documenting them as practice tasks.
 
+</content_verification_protocol>
+
 ---
+
+<versioning>
 
 ## 7. Versioning
 
@@ -145,7 +179,11 @@ Before adding or modifying any feature documentation:
 - **Semver applied to content**: patch = corrections/clarifications, minor = new sections/features covered, major = restructuring or adding a new agent
 - Current version tracked in the top entry of `docs/versions.md`
 
+</versioning>
+
 ---
+
+<change_policy>
 
 ## 8. Change Policy
 
@@ -156,7 +194,11 @@ Before adding or modifying any feature documentation:
 5. **Documentation updates**: Update `docs/status.md` and `docs/versions.md` after significant changes.
 6. **No auto-publish**: All content additions require human review before committing.
 
+</change_policy>
+
 ---
+
+<testing>
 
 ## 9. Testing Requirements (Phase 1)
 
@@ -166,7 +208,11 @@ Phase 1 has no executable code, so testing means **content validation**:
 - Verify all internal links resolve (section anchors within the guide)
 - Verify comparative tables have entries for both agents on every row
 
+</testing>
+
 ---
+
+<definition_of_done>
 
 ## 10. Phase Completion Gate — Phase 1
 
@@ -180,7 +226,11 @@ Phase 1 is complete when:
 - [ ] `docs/status.md` and `docs/versions.md` are current
 - [ ] README.md accurately describes the guide's scope and how to use it
 
+</definition_of_done>
+
 ---
+
+<phase_transition>
 
 ## 11. Phase Transition Strategy
 
@@ -196,7 +246,11 @@ Phase 1 is complete when:
 - Standardized task definitions, scoring rubrics, and result reporting
 - May require containerized sandbox environments for running agent tasks safely
 
+</phase_transition>
+
 ---
+
+<self_audit>
 
 ## 12. Output & Completion Expectations
 
@@ -210,8 +264,14 @@ At the end of every non-trivial task, run through:
 6. **Docs check** — `docs/status.md` and `docs/versions.md` updated.
 7. **Git state** — report files changed, suggest commit message.
 
+</self_audit>
+
 ---
+
+<closing_reminder>
 
 ## 13. Closing Reminder
 
 Re-read this file before the next change. Every time.
+
+</closing_reminder>

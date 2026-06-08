@@ -1,0 +1,1786 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>coding-agents-tooling — Project Documentation</title>
+  <style>
+/* ============================================================================
+   doc.css — Shared design system for project documentation pages.
+   One source of truth for every project's PROJECT_DOCUMENTATION.html.
+   Inlined directly into this PROJECT_DOCUMENTATION.html (self-contained; no external stylesheet).
+   Do not fork per-project styles. Restyle here to restyle every project at once.
+   ============================================================================ */
+
+/* ---- Theme tokens ------------------------------------------------------- */
+:root {
+  --accent: #4f46e5;
+  --accent-soft: #eef2ff;
+  --accent-border: #c7d2fe;
+  --accent-text: #4338ca;
+
+  --bg: #ffffff;
+  --bg-alt: #f7f8fa;
+  --panel: #ffffff;
+  --panel-alt: #f3f4f6;
+  --border: #e5e7eb;
+  --border-strong: #d1d5db;
+  --text: #1f2937;
+  --text-soft: #374151;
+  --muted: #6b7280;
+
+  --code-bg: #f6f8fa;
+  --code-text: #1f2937;
+  --code-border: #e5e7eb;
+
+  --fileref-bg: #eef2ff;
+  --fileref-text: #3730a3;
+  --fileref-border: #c7d2fe;
+
+  --note-bg: #eff6ff;   --note-border: #3b82f6;   --note-text: #1e40af;
+  --tip-bg: #ecfdf5;    --tip-border: #10b981;    --tip-text: #065f46;
+  --warn-bg: #fffbeb;   --warn-border: #f59e0b;   --warn-text: #92400e;
+  --key-bg: #faf5ff;    --key-border: #a855f7;    --key-text: #6b21a8;
+  --danger-bg: #fef2f2; --danger-border: #ef4444; --danger-text: #991b1b;
+
+  --shadow: 0 1px 2px rgba(16,24,40,.06), 0 1px 3px rgba(16,24,40,.10);
+  --shadow-lg: 0 10px 30px rgba(16,24,40,.12);
+
+  --radius: 12px;
+  --radius-sm: 8px;
+  --header-h: 64px;
+
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+
+  --maxw: 980px;
+}
+
+:root[data-theme="dark"] {
+  --accent: #818cf8;
+  --accent-soft: #1e213a;
+  --accent-border: #3b3f6b;
+  --accent-text: #a5b4fc;
+
+  --bg: #0d1117;
+  --bg-alt: #0a0d12;
+  --panel: #161b22;
+  --panel-alt: #1c2230;
+  --border: #2d333b;
+  --border-strong: #3d444d;
+  --text: #e6edf3;
+  --text-soft: #c9d1d9;
+  --muted: #8b949e;
+
+  --code-bg: #161b22;
+  --code-text: #e6edf3;
+  --code-border: #30363d;
+
+  --fileref-bg: #1e213a;
+  --fileref-text: #c7d2fe;
+  --fileref-border: #3b3f6b;
+
+  --note-bg: #0d2138;   --note-border: #3b82f6;   --note-text: #93c5fd;
+  --tip-bg: #082a1e;    --tip-border: #10b981;    --tip-text: #6ee7b7;
+  --warn-bg: #2b2410;   --warn-border: #f59e0b;   --warn-text: #fcd34d;
+  --key-bg: #221033;    --key-border: #a855f7;    --key-text: #d8b4fe;
+  --danger-bg: #2c1212; --danger-border: #ef4444; --danger-text: #fca5a5;
+
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 1px 3px rgba(0,0,0,.4);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,.5);
+}
+
+/* ---- Base --------------------------------------------------------------- */
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--font);
+  background: var(--bg-alt);
+  color: var(--text);
+  line-height: 1.65;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent-text); text-decoration: none; }
+a:hover { text-decoration: underline; }
+h1, h2, h3, h4 { line-height: 1.25; color: var(--text); }
+p { margin: 0 0 1rem; }
+hr { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+
+/* ---- Scroll progress bar ------------------------------------------------ */
+#scrollProgress {
+  position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+  background: linear-gradient(90deg, var(--accent), #ec4899);
+  z-index: 1000; transition: width .08s linear;
+}
+
+/* ---- Header ------------------------------------------------------------- */
+.doc-header {
+  position: sticky; top: 0; z-index: 900;
+  height: var(--header-h);
+  display: flex; align-items: center; gap: 1rem;
+  padding: 0 1.25rem;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+.doc-header .brand { display: flex; flex-direction: column; min-width: 0; }
+.doc-header .brand .kicker {
+  font-size: .68rem; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--muted); font-weight: 700;
+}
+.doc-header .brand .title {
+  font-size: 1.05rem; font-weight: 700; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis; max-width: 46vw;
+}
+.doc-header .spacer { flex: 1 1 auto; }
+
+.doc-search {
+  position: relative; display: flex; align-items: center;
+}
+.doc-search input {
+  width: 230px; max-width: 36vw;
+  padding: .5rem .75rem .5rem 2rem;
+  border: 1px solid var(--border-strong); border-radius: 999px;
+  background: var(--panel); color: var(--text); font-size: .9rem;
+  outline: none; transition: border-color .15s, box-shadow .15s, width .2s;
+}
+.doc-search input:focus {
+  border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); width: 280px;
+}
+.doc-search::before {
+  content: ""; position: absolute; left: .65rem; width: 14px; height: 14px; opacity: .55;
+  background: currentColor;
+  -webkit-mask: var(--icon-search) center/contain no-repeat;
+          mask: var(--icon-search) center/contain no-repeat;
+  color: var(--muted);
+}
+.search-count {
+  position: absolute; right: .6rem; font-size: .72rem; color: var(--muted);
+  pointer-events: none;
+}
+
+.btn {
+  display: inline-flex; align-items: center; gap: .4rem;
+  padding: .42rem .7rem; font-size: .82rem; font-weight: 600;
+  border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+  background: var(--panel); color: var(--text-soft); cursor: pointer;
+  transition: background .15s, border-color .15s, color .15s; white-space: nowrap;
+}
+.btn:hover { background: var(--panel-alt); border-color: var(--accent); color: var(--accent-text); }
+.btn .ico { width: 15px; height: 15px; background: currentColor;
+  -webkit-mask-size: contain; mask-size: contain;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  -webkit-mask-position: center; mask-position: center; }
+.btn-group { display: flex; gap: .4rem; }
+@media (max-width: 760px) { .btn .label { display: none; } .doc-header .title { max-width: 32vw; } }
+
+/* ---- Layout ------------------------------------------------------------- */
+.doc-layout {
+  display: grid; grid-template-columns: 290px minmax(0, 1fr);
+  align-items: start; gap: 0;
+  max-width: 1400px; margin: 0 auto;
+}
+.doc-toc {
+  position: sticky; top: var(--header-h);
+  height: calc(100vh - var(--header-h));
+  overflow-y: auto; padding: 1.25rem .75rem 3rem 1.25rem;
+  border-right: 1px solid var(--border);
+}
+.doc-toc .toc-title {
+  font-size: .7rem; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--muted); font-weight: 700; margin: 0 0 .5rem .5rem;
+}
+.doc-toc ul { list-style: none; margin: 0; padding: 0; }
+.doc-toc li { margin: 0; }
+.doc-toc a {
+  display: block; padding: .32rem .5rem; border-radius: 6px;
+  color: var(--text-soft); font-size: .86rem; line-height: 1.4;
+  border-left: 2px solid transparent;
+}
+.doc-toc a:hover { background: var(--panel-alt); text-decoration: none; }
+.doc-toc a.sub { padding-left: 1.4rem; font-size: .8rem; color: var(--muted); }
+.doc-toc a.active {
+  color: var(--accent-text); background: var(--accent-soft);
+  border-left-color: var(--accent); font-weight: 600;
+}
+.doc-toc .toc-num {
+  display: inline-block; min-width: 1.4em; color: var(--muted);
+  font-variant-numeric: tabular-nums; font-weight: 600;
+}
+.doc-toc a.active .toc-num { color: var(--accent); }
+
+.doc-content { padding: 2rem 2.5rem 6rem; min-width: 0; }
+.doc-content-inner { max-width: var(--maxw); margin: 0 auto; }
+@media (max-width: 980px) {
+  .doc-layout { grid-template-columns: 1fr; }
+  .doc-toc { display: none; }
+  .doc-content { padding: 1.25rem 1rem 4rem; }
+}
+
+/* ---- Hero (page intro) -------------------------------------------------- */
+.doc-hero { margin-bottom: 1.75rem; }
+.doc-hero h1 { font-size: 2.1rem; margin: 0 0 .4rem; letter-spacing: -.02em; }
+.doc-hero .lede { font-size: 1.12rem; color: var(--text-soft); margin: 0 0 1rem; }
+.badge-row { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
+.badge {
+  display: inline-flex; align-items: center; gap: .35rem;
+  padding: .25rem .6rem; border-radius: 999px; font-size: .76rem; font-weight: 600;
+  background: var(--panel-alt); color: var(--text-soft); border: 1px solid var(--border);
+}
+.badge.accent { background: var(--accent-soft); color: var(--accent-text); border-color: var(--accent-border); }
+.badge.green  { background: var(--tip-bg); color: var(--tip-text); border-color: var(--tip-border); }
+.badge.amber  { background: var(--warn-bg); color: var(--warn-text); border-color: var(--warn-border); }
+.badge.purple { background: var(--key-bg); color: var(--key-text); border-color: var(--key-border); }
+
+.meta-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: .75rem; margin: 1rem 0 0;
+}
+.meta-grid .meta-item {
+  background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: .7rem .85rem;
+}
+.meta-grid .meta-k {
+  font-size: .68rem; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--muted); font-weight: 700; margin-bottom: .15rem;
+}
+.meta-grid .meta-v { font-size: .92rem; font-weight: 600; color: var(--text); }
+
+/* ---- Sections (collapsible top level) ----------------------------------- */
+.doc-section { scroll-margin-top: calc(var(--header-h) + 12px); margin-bottom: 1.1rem; }
+.doc-section > details {
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden;
+}
+.doc-section > details[open] { box-shadow: var(--shadow-lg); }
+.doc-section > details > summary {
+  list-style: none; cursor: pointer; user-select: none;
+  display: flex; align-items: center; gap: .75rem;
+  padding: 1rem 1.25rem; font-weight: 700;
+}
+.doc-section > details > summary::-webkit-details-marker { display: none; }
+.doc-section > details > summary:hover { background: var(--panel-alt); }
+.doc-section > details > summary h2 {
+  font-size: 1.2rem; margin: 0; font-weight: 700; flex: 1 1 auto;
+}
+.doc-section .sec-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 1.9rem; height: 1.9rem; border-radius: 8px;
+  background: var(--accent-soft); color: var(--accent-text);
+  font-size: .85rem; font-weight: 800; font-variant-numeric: tabular-nums;
+}
+.doc-section .chevron {
+  width: 18px; height: 18px; color: var(--muted); transition: transform .2s; flex: 0 0 auto;
+  background: currentColor;
+  -webkit-mask: var(--icon-chevron) center/contain no-repeat;
+          mask: var(--icon-chevron) center/contain no-repeat;
+}
+.doc-section > details[open] > summary .chevron { transform: rotate(90deg); }
+.sec-body { padding: .25rem 1.5rem 1.5rem; border-top: 1px solid var(--border); }
+.sec-body > :first-child { margin-top: 1rem; }
+
+/* sub-collapsibles inside a section (per-component drilldowns) */
+details.sub {
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  background: var(--bg-alt); margin: .85rem 0; overflow: hidden;
+}
+details.sub > summary {
+  list-style: none; cursor: pointer; padding: .7rem 1rem; font-weight: 600;
+  display: flex; align-items: center; gap: .55rem; font-size: .96rem;
+}
+details.sub > summary::-webkit-details-marker { display: none; }
+details.sub > summary:hover { background: var(--panel-alt); }
+details.sub > summary::before {
+  content: ""; width: 14px; height: 14px; color: var(--muted); transition: transform .2s; flex: 0 0 auto;
+  background: currentColor;
+  -webkit-mask: var(--icon-chevron) center/contain no-repeat;
+          mask: var(--icon-chevron) center/contain no-repeat;
+}
+details.sub[open] > summary::before { transform: rotate(90deg); }
+details.sub > summary .sub-tag {
+  margin-left: auto; font-family: var(--mono); font-size: .72rem; font-weight: 600;
+  color: var(--muted); background: var(--panel-alt); border: 1px solid var(--border);
+  padding: .1rem .45rem; border-radius: 6px;
+}
+.sub-body { padding: .25rem 1rem 1rem; }
+.sub-body > :first-child { margin-top: .65rem; }
+
+/* ---- File references ---------------------------------------------------- */
+code.fileref {
+  font-family: var(--mono); font-size: .82em; font-weight: 600;
+  background: var(--fileref-bg); color: var(--fileref-text);
+  border: 1px solid var(--fileref-border); border-radius: 6px;
+  padding: .08em .45em .08em 1.5em; cursor: pointer; position: relative;
+  white-space: nowrap; transition: filter .12s;
+}
+code.fileref::before {
+  content: ""; position: absolute; left: .4em; top: 50%; transform: translateY(-50%);
+  width: .85em; height: .85em; background: currentColor; opacity: .8;
+  -webkit-mask: var(--icon-file) center/contain no-repeat;
+          mask: var(--icon-file) center/contain no-repeat;
+}
+code.fileref:hover { filter: brightness(.96); text-decoration: none; }
+:root[data-theme="dark"] code.fileref:hover { filter: brightness(1.15); }
+code.fileref.copied { background: var(--tip-bg); color: var(--tip-text); border-color: var(--tip-border); }
+code.fileref.dir::before { -webkit-mask: var(--icon-folder) center/contain no-repeat; mask: var(--icon-folder) center/contain no-repeat; }
+
+.filecard {
+  display: flex; align-items: baseline; gap: .65rem; flex-wrap: wrap;
+  padding: .55rem .7rem; border: 1px solid var(--border); border-radius: var(--radius-sm);
+  background: var(--bg-alt); margin: .4rem 0;
+}
+.filecard .filecard-desc { color: var(--text-soft); font-size: .92rem; }
+.filelist { display: flex; flex-direction: column; gap: .35rem; margin: .75rem 0; }
+
+/* ---- Inline code & code blocks ------------------------------------------ */
+:not(pre) > code {
+  font-family: var(--mono); font-size: .86em;
+  background: var(--panel-alt); border: 1px solid var(--border);
+  border-radius: 5px; padding: .08em .4em; color: var(--code-text);
+}
+figure.code {
+  margin: 1rem 0; border: 1px solid var(--code-border); border-radius: var(--radius-sm);
+  overflow: hidden; background: var(--code-bg);
+}
+figure.code figcaption {
+  display: flex; align-items: center; gap: .5rem;
+  padding: .5rem .85rem; font-family: var(--mono); font-size: .76rem; font-weight: 600;
+  color: var(--muted); background: var(--panel-alt); border-bottom: 1px solid var(--code-border);
+}
+figure.code figcaption .lang {
+  margin-left: auto; text-transform: uppercase; letter-spacing: .06em; font-size: .68rem;
+}
+figure.code pre { margin: 0; padding: .9rem 1rem; overflow-x: auto; }
+figure.code code { font-family: var(--mono); font-size: .82rem; line-height: 1.6; color: var(--code-text); background: none; border: none; padding: 0; }
+.code-copy {
+  position: absolute; top: .4rem; right: .4rem; opacity: 0; transition: opacity .15s;
+}
+figure.code { position: relative; }
+figure.code:hover .code-copy { opacity: 1; }
+
+/* ---- Callouts ----------------------------------------------------------- */
+.callout {
+  display: grid; grid-template-columns: auto 1fr; gap: .25rem .75rem;
+  padding: .85rem 1rem; border-radius: var(--radius-sm); margin: 1rem 0;
+  border: 1px solid; border-left-width: 4px;
+}
+.callout .callout-title { font-weight: 700; font-size: .9rem; grid-column: 2; }
+.callout .callout-body { grid-column: 2; }
+.callout .callout-body > :last-child { margin-bottom: 0; }
+.callout::before {
+  content: ""; grid-row: 1 / span 2; width: 18px; height: 18px; margin-top: .15rem;
+  background: currentColor;
+  -webkit-mask-size: contain; mask-size: contain;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+}
+.callout.note  { background: var(--note-bg); border-color: var(--note-border); color: var(--note-text); }
+.callout.tip   { background: var(--tip-bg);  border-color: var(--tip-border);  color: var(--tip-text); }
+.callout.warn  { background: var(--warn-bg); border-color: var(--warn-border); color: var(--warn-text); }
+.callout.key   { background: var(--key-bg);  border-color: var(--key-border);  color: var(--key-text); }
+.callout.danger{ background: var(--danger-bg); border-color: var(--danger-border); color: var(--danger-text); }
+.callout.note::before  { -webkit-mask: var(--icon-info) center/contain no-repeat; mask: var(--icon-info) center/contain no-repeat; }
+.callout.tip::before   { -webkit-mask: var(--icon-bulb) center/contain no-repeat; mask: var(--icon-bulb) center/contain no-repeat; }
+.callout.warn::before  { -webkit-mask: var(--icon-warn) center/contain no-repeat; mask: var(--icon-warn) center/contain no-repeat; }
+.callout.key::before   { -webkit-mask: var(--icon-key) center/contain no-repeat; mask: var(--icon-key) center/contain no-repeat; }
+.callout.danger::before{ -webkit-mask: var(--icon-warn) center/contain no-repeat; mask: var(--icon-warn) center/contain no-repeat; }
+.callout .callout-body code { background: color-mix(in srgb, currentColor 12%, transparent); border-color: transparent; color: inherit; }
+
+/* ---- Tables ------------------------------------------------------------- */
+.table-wrap { overflow-x: auto; margin: 1rem 0; border: 1px solid var(--border); border-radius: var(--radius-sm); }
+table.doc-table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+table.doc-table th, table.doc-table td { padding: .6rem .8rem; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+table.doc-table thead th { background: var(--panel-alt); font-weight: 700; font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); position: sticky; top: 0; }
+table.doc-table tbody tr:last-child td { border-bottom: none; }
+table.doc-table tbody tr:hover { background: var(--bg-alt); }
+table.doc-table code { white-space: nowrap; }
+
+/* ---- Definition lists --------------------------------------------------- */
+dl.doc-dl { margin: 1rem 0; display: grid; grid-template-columns: minmax(140px, 220px) 1fr; gap: .1rem 1rem; }
+dl.doc-dl dt { font-weight: 700; color: var(--text); padding: .4rem 0; border-top: 1px solid var(--border); }
+dl.doc-dl dd { margin: 0; padding: .4rem 0; color: var(--text-soft); border-top: 1px solid var(--border); }
+dl.doc-dl dt:first-of-type, dl.doc-dl dd:first-of-type { border-top: none; }
+@media (max-width: 620px) { dl.doc-dl { grid-template-columns: 1fr; } dl.doc-dl dd { padding-top: 0; border-top: none; } }
+
+/* ---- Tech-stack cards --------------------------------------------------- */
+.stack-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: .85rem; margin: 1rem 0; }
+.stack-card {
+  border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg-alt);
+  padding: .85rem .95rem; display: flex; flex-direction: column; gap: .35rem;
+}
+.stack-card .stack-head { display: flex; align-items: baseline; gap: .5rem; }
+.stack-card .stack-name { font-weight: 700; font-size: 1rem; }
+.stack-card .stack-ver { font-family: var(--mono); font-size: .76rem; color: var(--accent-text); background: var(--accent-soft); border: 1px solid var(--accent-border); border-radius: 5px; padding: .05rem .4rem; }
+.stack-card .stack-why { font-size: .87rem; color: var(--text-soft); }
+.stack-card .stack-foot { margin-top: auto; }
+
+/* ---- Step list ---------------------------------------------------------- */
+ol.steps { counter-reset: step; list-style: none; padding: 0; margin: 1rem 0; }
+ol.steps > li {
+  position: relative; padding: .15rem 0 .9rem 2.4rem; margin: 0;
+  border-left: 2px solid var(--border); margin-left: .9rem;
+}
+ol.steps > li:last-child { border-left-color: transparent; }
+ol.steps > li::before {
+  counter-increment: step; content: counter(step);
+  position: absolute; left: -.95rem; top: 0;
+  width: 1.8rem; height: 1.8rem; border-radius: 50%;
+  background: var(--accent); color: #fff; font-weight: 700; font-size: .85rem;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ---- Pipeline / flow chips ---------------------------------------------- */
+.flow { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem; margin: 1rem 0; }
+.flow .node { padding: .35rem .7rem; border: 1px solid var(--accent-border); background: var(--accent-soft); color: var(--accent-text); border-radius: var(--radius-sm); font-weight: 600; font-size: .85rem; }
+.flow .arrow { color: var(--muted); font-weight: 700; }
+
+/* ---- Diagram (mermaid) -------------------------------------------------- */
+figure.diagram { margin: 1.25rem 0; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--panel); padding: 1rem; overflow-x: auto; text-align: center; }
+figure.diagram figcaption { margin-top: .6rem; font-size: .82rem; color: var(--muted); text-align: center; }
+figure.diagram .mermaid { display: flex; justify-content: center; }
+.mermaid-fallback { display: none; }
+figure.diagram.failed .mermaid { display: none; }
+figure.diagram.failed .mermaid-fallback { display: block; text-align: left; }
+
+/* ---- Misc --------------------------------------------------------------- */
+.tag-list { display: flex; flex-wrap: wrap; gap: .4rem; margin: .5rem 0; }
+.tag { font-size: .76rem; padding: .15rem .5rem; border-radius: 999px; background: var(--panel-alt); border: 1px solid var(--border); color: var(--text-soft); font-family: var(--mono); }
+
+.lead-in { font-size: 1rem; color: var(--text-soft); border-left: 3px solid var(--accent); padding-left: .9rem; margin: 0 0 1.25rem; }
+
+ul.clean { list-style: none; padding-left: 0; }
+ul.clean > li { position: relative; padding-left: 1.4rem; margin: .35rem 0; }
+ul.clean > li::before { content: ""; position: absolute; left: .2rem; top: .55em; width: .4rem; height: .4rem; border-radius: 50%; background: var(--accent); }
+
+.content-section h3 { margin-top: 1.5rem; font-size: 1.05rem; }
+.sec-body h3 { margin-top: 1.6rem; font-size: 1.08rem; padding-bottom: .3rem; border-bottom: 1px solid var(--border); }
+.sec-body h4 { margin-top: 1.2rem; font-size: .96rem; }
+
+mark.hl { background: #fde68a; color: #78350f; border-radius: 3px; padding: 0 .1em; }
+:root[data-theme="dark"] mark.hl { background: #92400e; color: #fde68a; }
+
+.filtered-out { display: none !important; }
+
+/* ---- Back to top -------------------------------------------------------- */
+#backTop {
+  position: fixed; right: 1.25rem; bottom: 1.25rem; z-index: 800;
+  width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border-strong);
+  background: var(--panel); color: var(--text-soft); cursor: pointer; box-shadow: var(--shadow-lg);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transform: translateY(10px); pointer-events: none; transition: opacity .2s, transform .2s;
+}
+#backTop.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+#backTop:hover { color: var(--accent-text); border-color: var(--accent); }
+#backTop .ico { width: 20px; height: 20px; background: currentColor; -webkit-mask: var(--icon-up) center/contain no-repeat; mask: var(--icon-up) center/contain no-repeat; }
+
+/* ---- Footer ------------------------------------------------------------- */
+.doc-footer {
+  border-top: 1px solid var(--border); margin-top: 2rem; padding: 1.5rem 2.5rem;
+  color: var(--muted); font-size: .84rem; max-width: 1400px; margin-left: auto; margin-right: auto;
+}
+.doc-footer code { font-size: .8em; }
+
+/* ---- Icons (data-URI masks; monochrome, themeable via currentColor) ----- */
+:root {
+  --icon-search: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>');
+  --icon-chevron: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>');
+  --icon-file: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>');
+  --icon-folder: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>');
+  --icon-info: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>');
+  --icon-bulb: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M15.09 14c.18-.79.62-1.42 1.27-2A4.5 4.5 0 1 0 7.64 12c.65.58 1.09 1.21 1.27 2"/></svg>');
+  --icon-warn: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4M12 17h.01"/></svg>');
+  --icon-key: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6M15.5 7.5l3 3L22 7l-3-3"/></svg>');
+  --icon-up: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>');
+  --icon-expand: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 15 5 5 5-5M7 9l5-5 5 5"/></svg>');
+  --icon-collapse: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 20 5-5 5 5M7 4l5 5 5-5"/></svg>');
+  --icon-sun: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>');
+  --icon-moon: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>');
+  --icon-print: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v8H6z"/></svg>');
+  --icon-copy: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>');
+}
+
+/* ---- Print -------------------------------------------------------------- */
+@media print {
+  .doc-header, .doc-toc, #backTop, #scrollProgress, .code-copy { display: none !important; }
+  .doc-layout { grid-template-columns: 1fr; }
+  .doc-content { padding: 0; }
+  .doc-section > details { box-shadow: none; border-color: #ccc; break-inside: avoid; }
+  body { background: #fff; }
+  a { color: inherit; }
+}
+
+/* ---- Index hub (DOCUMENTATION_INDEX.html) ------------------------------- */
+.index-wrap { max-width: 1180px; margin: 0 auto; padding: 2.5rem 2rem 5rem; }
+.index-hero { margin-bottom: 2rem; }
+.index-hero h1 { font-size: 2.3rem; margin: 0 0 .5rem; letter-spacing: -.02em; }
+.index-hero .lede { font-size: 1.15rem; color: var(--text-soft); margin: 0; max-width: 70ch; }
+.index-stats { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-top: 1.25rem; }
+.index-stats .stat { display: flex; flex-direction: column; }
+.index-stats .stat .num { font-size: 1.7rem; font-weight: 800; color: var(--accent-text); line-height: 1; }
+.index-stats .stat .lbl { font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 700; margin-top: .3rem; }
+.index-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 1rem; margin: 1.75rem 0 0; }
+a.index-card { text-decoration: none; color: inherit; border: 1px solid var(--border); border-radius: var(--radius); background: var(--panel); padding: 1.15rem 1.25rem; display: flex; flex-direction: column; gap: .55rem; box-shadow: var(--shadow); transition: transform .12s, box-shadow .12s, border-color .12s; }
+a.index-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); border-color: var(--accent); text-decoration: none; }
+a.index-card .ic-title { font-size: 1.12rem; font-weight: 700; color: var(--text); font-family: var(--mono); }
+a.index-card .ic-desc { font-size: .9rem; color: var(--text-soft); line-height: 1.5; flex: 1 1 auto; }
+a.index-card .ic-badges { display: flex; flex-wrap: wrap; gap: .35rem; }
+a.index-card .ic-open { margin-top: .35rem; font-size: .8rem; font-weight: 700; color: var(--accent-text); display: inline-flex; align-items: center; gap: .3rem; }
+a.index-card .ic-open::after { content: "→"; transition: transform .12s; }
+a.index-card:hover .ic-open::after { transform: translateX(3px); }
+@media (max-width: 560px) { .index-wrap { padding: 1.5rem 1rem 3rem; } .index-grid { grid-template-columns: 1fr; } }
+
+  </style>
+</head>
+<body>
+  <div id="scrollProgress"></div>
+
+  <header class="doc-header">
+    <div class="brand">
+      <span class="kicker">Project Guide</span>
+      <span class="title">coding-agents-tooling</span>
+    </div>
+    <div class="spacer"></div>
+    <div class="doc-search">
+      <input id="docSearch" type="search" placeholder="Search this guide…" aria-label="Search documentation">
+      <span class="search-count"></span>
+    </div>
+    <div class="btn-group">
+      <button class="btn" id="expandAll" title="Expand all sections"><span class="ico" style="-webkit-mask:var(--icon-expand) center/contain no-repeat;mask:var(--icon-expand) center/contain no-repeat"></span><span class="label">Expand</span></button>
+      <button class="btn" id="collapseAll" title="Collapse all sections"><span class="ico" style="-webkit-mask:var(--icon-collapse) center/contain no-repeat;mask:var(--icon-collapse) center/contain no-repeat"></span><span class="label">Collapse</span></button>
+      <button class="btn" id="themeToggle" title="Toggle light / dark"><span class="ico"></span></button>
+      <button class="btn" id="printBtn" title="Print / Save as PDF"><span class="ico" style="-webkit-mask:var(--icon-print) center/contain no-repeat;mask:var(--icon-print) center/contain no-repeat"></span></button>
+    </div>
+  </header>
+
+  <div class="doc-layout">
+    <nav class="doc-toc" id="docToc"><div class="toc-title">Contents</div></nav>
+
+    <main class="doc-content">
+      <div class="doc-content-inner">
+
+        <section class="doc-hero">
+          <h1>coding-agents-tooling</h1>
+          <p class="lede">A comparative reference and practice guide for mastering two coding agents — Claude Code (Anthropic) and OpenAI Codex CLI — plus the dual-agent harness (instruction files, hooks, skills, commands) that lets both agents work on this very repo.</p>
+          <div class="badge-row">
+            <span class="badge accent">Documentation project</span>
+            <span class="badge green">Phase 1 · active</span>
+            <span class="badge purple">Markdown + Node hooks</span>
+            <span class="badge">v0.1.0</span>
+          </div>
+          <div class="meta-grid">
+            <div class="meta-item"><div class="meta-k">Primary artifact</div><div class="meta-v">coding-agents-practice-guide.md</div></div>
+            <div class="meta-item"><div class="meta-k">Harness</div><div class="meta-v">CLAUDE.md + AGENTS.md · scripts/hooks/*.cjs</div></div>
+            <div class="meta-item"><div class="meta-k">Versioning</div><div class="meta-v">pyproject.toml · docs/versions.md</div></div>
+            <div class="meta-item"><div class="meta-k">CI</div><div class="meta-v">GitHub Actions · manual release bump</div></div>
+            <div class="meta-item"><div class="meta-k">Status</div><div class="meta-v">Phase 1 draft complete</div></div>
+            <div class="meta-item"><div class="meta-k">Repo</div><div class="meta-v">github.com/amrambouskila/coding-agents-tooling</div></div>
+          </div>
+        </section>
+
+        <section class="doc-section" id="overview">
+          <details open>
+            <summary><span class="sec-num">1</span><h2>Overview — what this is &amp; why</h2><span class="chevron"></span></summary>
+            <div class="sec-body">
+              <p class="lead-in">A documentation-first project. There is no application to run — the deliverable is a written guide, wrapped in a working dual-agent harness that demonstrates the very features it documents.</p>
+
+              <p>This repository has two faces. The <strong>visible deliverable</strong> is <code class="fileref" data-path="coding-agents-practice-guide.md">coding-agents-practice-guide.md</code> — a ~1,200-line comparative reference that documents every feature surface of <strong>Claude Code</strong> (Anthropic) and <strong>OpenAI Codex CLI</strong> side by side: architecture, installation, CLI commands and flags, the TUI, slash commands, permission/approval modes, instruction files, skills, hooks, plugins, MCP, subagents and agent teams, headless mode, sandboxing, configuration files, IDE integration, CI/CD, cloud surfaces, scheduling, models, context management, checkpointing, the agent SDK, channels, enterprise governance, applied exercises, and a feature cross-reference matrix.</p>
+
+              <p>The <strong>second face</strong> is the repository itself: a fully wired, OS-agnostic harness that lets <em>both</em> agents edit this repo with the same behavior. It carries parallel instruction files (<code class="fileref" data-path="CLAUDE.md">CLAUDE.md</code> for Claude Code, <code class="fileref" data-path="AGENTS.md">AGENTS.md</code> for Codex), a shared set of Node-based lifecycle hooks under <code class="fileref dir" data-path="scripts/hooks/">scripts/hooks/</code>, a Codex hook registration in <code class="fileref" data-path=".codex/hooks.json">.codex/hooks.json</code>, slash commands in <code class="fileref dir" data-path=".codex/commands/">.codex/commands/</code>, and a phase-awareness skill in <code class="fileref dir" data-path=".agents/skills/">.agents/skills/</code>. The harness is itself a worked example of sections 7–9 of the guide.</p>
+
+              <p><strong>Audience &amp; intent.</strong> The reader is a senior engineer who already uses coding agents daily and wants deep, comparative mastery — not a beginner tutorial. The project's prime directive (from <code class="fileref" data-path="CLAUDE.md">CLAUDE.md</code> §0) is <em>accuracy over coverage</em>: every feature claim must be verifiable against official docs or observed CLI behavior, and comparative tables must be fair to both platforms with no editorializing about which is "better."</p>
+
+              <div class="callout key">
+                <div class="callout-title">Key concept</div>
+                <div class="callout-body">This is a <strong>reference/practice project, not a software application</strong>. There is no FastAPI service, no React frontend, no database, no Docker. The "code" here is the harness (hooks + config + CI), and the "product" is prose. Phase 2 (interactive exercises) and Phase 3 (benchmarking tools) are planned but not built.</div>
+              </div>
+
+              <p><strong>Current state.</strong> Phase 1 — Curated Reference Documentation — is active and the guide exists as a complete first draft (all 27 sections, with Mermaid diagrams, comparative tables, and exercises). Version is <code>v0.1.0</code>. The remaining Phase 1 work is an accuracy audit against official docs and closing the phase-completion gate (see <a href="#roadmap">Roadmap</a>).</p>
+
+              <div class="callout warn">
+                <div class="callout-title">Watch out — documentation drift</div>
+                <div class="callout-body">Several docs were written before the harness was added and are now stale. <code class="fileref" data-path="README.md">README.md</code> and the file-inventory blocks in <code class="fileref" data-path="CLAUDE.md">CLAUDE.md</code> / <code class="fileref" data-path="AGENTS.md">AGENTS.md</code> describe a <code>.claude/</code> directory with <code>settings.json</code>, <code>commands/</code>, and <code>skills/</code>. That directory does not exist in the repo (it is gitignored). The real harness lives in <code>scripts/hooks/</code>, <code>.codex/</code>, and <code>.agents/</code>. They also state "no pyproject.toml," but <code class="fileref" data-path="pyproject.toml">pyproject.toml</code> now exists as the version source of truth for CI. These mismatches are flagged throughout this page.</div>
+              </div>
+            </div>
+          </details>
+        </section>
+
+        <section class="doc-section" id="status">
+          <details>
+            <summary><span class="sec-num">2</span><h2>Status &amp; at-a-glance</h2><span class="chevron"></span></summary>
+            <div class="sec-body">
+              <p class="lead-in">Where the project stands today versus what is planned.</p>
+
+              <div class="table-wrap"><table class="doc-table">
+                <thead><tr><th>Dimension</th><th>Value</th><th>Source</th></tr></thead>
+                <tbody>
+                  <tr><td>Phase</td><td>1 — Curated Reference Documentation (active)</td><td><code class="fileref" data-path="docs/status.md">docs/status.md</code></td></tr>
+                  <tr><td>Version</td><td><code>0.1.0</code></td><td><code class="fileref" data-path="pyproject.toml">pyproject.toml</code> · <code class="fileref" data-path="docs/versions.md">docs/versions.md</code></td></tr>
+                  <tr><td>Guide size</td><td>27 sections, ~1,197 lines / ~40 KB</td><td><code class="fileref" data-path="coding-agents-practice-guide.md">coding-agents-practice-guide.md</code></td></tr>
+                  <tr><td>Agents covered</td><td>Claude Code · OpenAI Codex CLI</td><td>guide</td></tr>
+                  <tr><td>Executable code</td><td>None in scope (Phase 1). Harness hooks are Node <code>.cjs</code>.</td><td><code class="fileref dir" data-path="scripts/hooks/">scripts/hooks/</code></td></tr>
+                  <tr><td>Last status update</td><td>2026-04-13</td><td><code class="fileref" data-path="docs/status.md">docs/status.md</code></td></tr>
+                </tbody>
+              </table></div>
+
+              <h3 class="anchor">What works today vs. planned</h3>
+              <div class="table-wrap"><table class="doc-table">
+                <thead><tr><th>Capability</th><th>State</th><th>Notes</th></tr></thead>
+                <tbody>
+                  <tr><td>Comprehensive practice guide (27 sections)</td><td>Built (draft)</td><td>Mermaid diagrams, comparative tables, exercises all present.</td></tr>
+                  <tr><td>Dual-agent harness (CLAUDE.md + AGENTS.md)</td><td>Built</td><td>Parallel instruction files, identical content, agent-specific naming.</td></tr>
+                  <tr><td>Shared Node hooks (pre/post tool, stop, memory)</td><td>Built</td><td>OS-agnostic <code>.cjs</code> per the global hook policy.</td></tr>
+                  <tr><td>Codex hook registration + commands + skill</td><td>Built</td><td><code class="fileref" data-path=".codex/hooks.json">.codex/hooks.json</code>, <code class="fileref dir" data-path=".codex/commands/">.codex/commands/</code>, <code class="fileref dir" data-path=".agents/skills/">.agents/skills/</code></td></tr>
+                  <tr><td>Release CI (manual version bump + tag)</td><td>Built</td><td><code class="fileref" data-path=".github/workflows/release.yml">.github/workflows/release.yml</code></td></tr>
+                  <tr><td>Content accuracy audit vs. official docs</td><td>Pending</td><td>Next Phase 1 task per <code class="fileref" data-path="docs/status.md">docs/status.md</code>.</td></tr>
+                  <tr><td>Interactive exercises (Jupyter/Streamlit)</td><td>Planned — Phase 2</td><td>Not started; format undecided.</td></tr>
+                  <tr><td>Agent benchmarking CLI</td><td>Planned — Phase 3</td><td>Not started.</td></tr>
+                </tbody>
+              </table></div>
+            </div>
+          </details>
+        </section>
+
+        <section class="doc-section" id="tech-stack">
+          <details>
+            <summary><span class="sec-num">3</span><h2>Tech stack</h2><span class="chevron"></span></summary>
+            <div class="sec-body">
+              <p class="lead-in">This is a documentation project, so the "stack" is deliberately thin: Markdown for content, Node for hooks, Python's packaging metadata for versioning, and GitHub Actions for release automation.</p>
+
+              <div class="stack-grid">
+                <div class="stack-card">
+                  <div class="stack-head"><span class="stack-name">Markdown + Mermaid</span><span class="stack-ver">—</span></div>
+                  <div class="stack-why">The guide is a single portable Markdown file with embedded Mermaid diagrams. Chosen so it renders anywhere (GitHub, GitLab, VS Code) with zero build tooling — see the decision log.</div>
+                  <div class="stack-foot"><code class="fileref" data-path="coding-agents-practice-guide.md">coding-agents-practice-guide.md</code></div>
+                </div>
+                <div class="stack-card">
+                  <div class="stack-head"><span class="stack-name">Node.js (CommonJS)</span><span class="stack-ver">.cjs</span></div>
+                  <div class="stack-why">Lifecycle hooks are <code>node -e require(...)</code> CommonJS modules. Per the user's global rule, project hooks must be Node <code>.cjs</code> — never bash/jq/python — so the same code runs under cmd.exe and POSIX shells alike.</div>
+                  <div class="stack-foot"><code class="fileref dir" data-path="scripts/hooks/">scripts/hooks/</code></div>
+                </div>
+                <div class="stack-card">
+                  <div class="stack-head"><span class="stack-name">uv (Astral)</span><span class="stack-ver">setup-uv@v3</span></div>
+                  <div class="stack-why">Used only in CI to bump the <code>pyproject.toml</code> version (<code>uv version --bump</code>). No runtime Python dependencies exist; <code class="fileref" data-path="uv.lock">uv.lock</code> resolves to just the virtual root package.</div>
+                  <div class="stack-foot"><code class="fileref" data-path=".github/workflows/release.yml">.github/workflows/release.yml</code></div>
+                </div>
+                <div class="stack-card">
+                  <div class="stack-head"><span class="stack-name">Python packaging</span><span class="stack-ver">&gt;=3.13</span></div>
+                  <div class="stack-why">A minimal <code>[project]</code> table whose only job is to hold the source-of-truth <code>version</code> field for the release workflow. No dependencies, no code, no build target.</div>
+                  <div class="stack-foot"><code class="fileref" data-path="pyproject.toml">pyproject.toml</code></div>
+                </div>
+                <div class="stack-card">
+                  <div class="stack-head"><span class="stack-name">GitHub Actions</span><span class="stack-ver">workflow_dispatch</span></div>
+                  <div class="stack-why">A single manually-triggered Release workflow bumps the version, commits, tags, and pushes. There is no lint/test pipeline (no executable product to test in Phase 1).</div>
+                  <div class="stack-foot"><code class="fileref" data-path=".github/workflows/release.yml">.github/workflows/release.yml</code></div>
+                </div>
+                <div class="stack-card">
+                  <div class="stack-head"><span class="stack-name">Bash + Batch launchers</span><span class="stack-ver">—</span></div>
+                  <div class="stack-why">Tiny wrappers that export <code>CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1</code> and exec <code>claude</code> — used to launch Claude Code with the experimental agent-teams flag enabled on either OS.</div>
+                  <div class="stack-foot"><code class="fileref" data-path="claude-teams.sh">claude-teams.sh</code> · <code class="fileref" data-path="claude-teams.bat">claude-teams.bat</code></div>
+                </div>
+              </div>
+
+              <div class="callout note">
+                <div class="callout-title">Note</div>
+                <div class="callout-body">No FastAPI, SQLAlchemy, Postgres, Redis, React, Vite, or Docker appear here — and that is correct. Phase 1 is documentation-only by explicit constraint (<code class="fileref" data-path="CLAUDE.md">CLAUDE.md</code> §2). The richer stack arrives only if Phase 2/3 are built.</div>
+              </div>
+            </div>
+          </details>
+        </section>
+
+        <section class="doc-section" id="architecture">
+          <details>
+            <summary><span class="sec-num">4</span><h2>Architecture</h2><span class="chevron"></span></summary>
+            <div class="sec-body">
+              <p class="lead-in">Two layers: a content layer (the guide and supporting docs) and a harness layer (instruction files, hooks, commands, skills, CI) that governs how agents edit the content.</p>
+
+              <figure class="diagram">
+                <div class="mermaid">
+graph TD
+    subgraph Content
+        GUIDE[practice guide md]
+        README[README md]
+        DOCS[docs status versions]
+        PLAN[master plan]
+    end
+    subgraph Harness
+        CLAUDEMD[CLAUDE md]
+        AGENTSMD[AGENTS md]
+        HOOKS[scripts hooks cjs]
+        CODEX[.codex hooks and commands]
+        SKILL[.agents skill]
+        CI[github release workflow]
+    end
+    CLAUDEMD --> GUIDE
+    AGENTSMD --> GUIDE
+    HOOKS --> GUIDE
+    HOOKS --> DOCS
+    CODEX --> HOOKS
+    SKILL --> GUIDE
+    PLAN --> GUIDE
+    CI --> PLAN
+                </div>
+                <div class="mermaid-fallback"><figure class="code"><figcaption>diagram source · mermaid</figcaption><pre><code>graph TD
+    subgraph Content
+        GUIDE[practice guide md]
+        README[README md]
+        DOCS[docs status versions]
+        PLAN[master plan]
+    end
+    subgraph Harness
+        CLAUDEMD[CLAUDE md]
+        AGENTSMD[AGENTS md]
+        HOOKS[scripts hooks cjs]
+        CODEX[.codex hooks and commands]
+        SKILL[.agents skill]
+        CI[github release workflow]
+    end
+    CLAUDEMD --> GUIDE
+    AGENTSMD --> GUIDE
+    HOOKS --> GUIDE
+    HOOKS --> DOCS
+    CODEX --> HOOKS
+    SKILL --> GUIDE
+    PLAN --> GUIDE
+    CI --> PLAN</code></pre></figure></div>
+                <figcaption>Content layer vs. harness layer. The harness is how either agent safely edits the content.</figcaption>
+              </figure>
+
+              <h3 class="anchor">Dual-agent symmetry</h3>
+              <p>The defining architectural choice is <strong>agent symmetry</strong>: every harness piece exists in a form both Claude Code and Codex understand, so the repo behaves identically no matter which agent opens it.</p>
+
+              <div class="table-wrap"><table class="doc-table">
+                <thead><tr><th>Concern</th><th>Claude Code reads</th><th>Codex reads</th><th>Shared implementation</th></tr></thead>
+                <tbody>
+                  <tr><td>Instruction file</td><td><code class="fileref" data-path="CLAUDE.md">CLAUDE.md</code></td><td><code class="fileref" data-path="AGENTS.md">AGENTS.md</code></td><td>Byte-identical content, agent name swapped</td></tr>
+                  <tr><td>Lifecycle hooks</td><td>(its own settings)</td><td><code class="fileref" data-path=".codex/hooks.json">.codex/hooks.json</code></td><td>Same <code>.cjs</code> files in <code class="fileref dir" data-path="scripts/hooks/">scripts/hooks/</code></td></tr>
+                  <tr><td>Slash commands</td><td>(its own dir)</td><td><code class="fileref dir" data-path=".codex/commands/">.codex/commands/</code></td><td><code>review.md</code>, <code>pre-commit.md</code></td></tr>
+                  <tr><td>Skills</td><td>(its own dir)</td><td><code class="fileref dir" data-path=".agents/skills/">.agents/skills/</code></td><td><code>phase-awareness/SKILL.md</code></td></tr>
+                </tbody>
+              </table></div>
+
+              <div class="callout key">
+                <div class="callout-title">Key concept — one hook codebase, two agents</div>
+                <div class="callout-body">The hooks read tool data from <strong>stdin as JSON</strong> (not from environment variables), and resolve the project root from <code>CLAUDE_PROJECT_DIR</code> with a <code>process.cwd()</code> fallback. That single design lets the exact same <code>.cjs</code> file run under both agents. See <code class="fileref" data-path="scripts/hooks/hookUtils.cjs">scripts/hooks/hookUtils.cjs</code>.</div>
+              </div>
+
+              <h3 class="anchor">Hook event flow</h3>
+              <figure class="diagram">
+                <div class="mermaid">
+sequenceDiagram
+    participant Agent
+    participant Pre as pre-tool-use
+    participant Tool as Write or Edit
+    participant Post as post-tool-use
+    participant Stop as stop and memory
+    Agent->>Pre: tool_input JSON on stdin
+    Pre-->>Agent: block if sensitive path
+    Agent->>Tool: execute edit
+    Tool->>Post: tool result JSON
+    Post-->>Agent: inject content rules context
+    Agent->>Stop: turn ends
+    Stop-->>Agent: uncommitted files plus memory review
+                </div>
+                <div class="mermaid-fallback"><figure class="code"><figcaption>diagram source · mermaid</figcaption><pre><code>sequenceDiagram
+    participant Agent
+    participant Pre as pre-tool-use
+    participant Tool as Write or Edit
+    participant Post as post-tool-use
+    participant Stop as stop and memory
+    Agent->>Pre: tool_input JSON on stdin
+    Pre-->>Agent: block if sensitive path
+    Agent->>Tool: execute edit
+    Tool->>Post: tool result JSON
+    Post-->>Agent: inject content rules context
+    Agent->>Stop: turn ends
+    Stop-->>Agent: uncommitted files plus memory review</code></pre></figure></div>
+                <figcaption>The four wired hook events and what each contributes during a single agent turn.</figcaption>
+              </figure>
+            </div>
+          </details>
+        </section>
+
+        <section class="doc-section" id="structure">
+          <details>
+            <summary><span class="sec-num">5</span><h2>Directory structure</h2><span class="chevron"></span></summary>
+            <div class="sec-body">
+              <p class="lead-in">The whole repo is small enough to enumerate completely. Below is every tracked path that matters.</p>
+
+              <div class="filelist">
+                <div class="filecard"><code class="fileref" data-path="coding-agents-practice-guide.md">coding-agents-practice-guide.md</code><span class="filecard-desc">The primary deliverable — the 27-section comparative guide.</span></div>
+                <div class="filecard"><code class="fileref" data-path="README.md">README.md</code><span class="filecard-desc">Human-facing overview, guide TOC, phase roadmap. (Some structure claims are stale — see Overview.)</span></div>
+                <div class="filecard"><code class="fileref" data-path="CLAUDE.md">CLAUDE.md</code><span class="filecard-desc">Project-level instruction file for Claude Code: mandatory-read workflow, phase constraints, content rules.</span></div>
+                <div class="filecard"><code class="fileref" data-path="AGENTS.md">AGENTS.md</code><span class="filecard-desc">The Codex counterpart of CLAUDE.md — identical content, "Codex" substituted for "Claude."</span></div>
+                <div class="filecard"><code class="fileref" data-path="pyproject.toml">pyproject.toml</code><span class="filecard-desc">Minimal project metadata; sole purpose is the source-of-truth <code>version</code> field for the release workflow.</span></div>
+                <div class="filecard"><code class="fileref" data-path="uv.lock">uv.lock</code><span class="filecard-desc">uv lockfile; resolves to just the virtual root package (no deps).</span></div>
+                <div class="filecard"><code class="fileref" data-path="claude-teams.sh">claude-teams.sh</code><span class="filecard-desc">macOS/Linux launcher: enables agent-teams flag, execs <code>claude</code>.</span></div>
+                <div class="filecard"><code class="fileref" data-path="claude-teams.bat">claude-teams.bat</code><span class="filecard-desc">Windows counterpart of the launcher.</span></div>
+                <div class="filecard"><code class="fileref" data-path=".gitignore">.gitignore</code><span class="filecard-desc">Ignores OS junk, IDEs, env files, the <code>.claude/</code> state dir, and Python/Node/Docker artifacts (mostly Phase 2+ forward-compat).</span></div>
+                <div class="filecard"><code class="fileref" data-path=".gitattributes">.gitattributes</code><span class="filecard-desc">Cross-OS line-ending normalization: <code>.cjs</code>/<code>.sh</code> stay LF, <code>.bat</code>/<code>.ps1</code> stay CRLF.</span></div>
+              </div>
+
+              <h3 class="anchor">docs/</h3>
+              <div class="filelist">
+                <div class="filecard"><code class="fileref" data-path="docs/CODING_AGENTS_TOOLING_MASTER_PLAN.md">docs/CODING_AGENTS_TOOLING_MASTER_PLAN.md</code><span class="filecard-desc">Authoritative master plan: vision, architecture, 3-phase roadmap, content quality gates, decision log.</span></div>
+                <div class="filecard"><code class="fileref" data-path="docs/status.md">docs/status.md</code><span class="filecard-desc">Live state: current phase, what was just built, what's next, open questions.</span></div>
+                <div class="filecard"><code class="fileref" data-path="docs/versions.md">docs/versions.md</code><span class="filecard-desc">Semver changelog (newest on top). Currently a single v0.1.0 entry.</span></div>
+              </div>
+
+              <h3 class="anchor">scripts/hooks/ — the shared hook codebase</h3>
+              <div class="filelist">
+                <div class="filecard"><code class="fileref" data-path="scripts/hooks/hookUtils.cjs">scripts/hooks/hookUtils.cjs</code><span class="filecard-desc">Shared utilities: stdin payload parsing, sensitive-path detection, read-only git helpers, project-name resolution.</span></div>
+                <div class="filecard"><code class="fileref" data-path="scripts/hooks/pre-tool-use.cjs">scripts/hooks/pre-tool-use.cjs</code><span class="filecard-desc">PreToolUse: blocks writes to sensitive files (env, keys, secrets).</span></div>
+                <div class="filecard"><code class="fileref" data-path="scripts/hooks/post-tool-use.cjs">scripts/hooks/post-tool-use.cjs</code><span class="filecard-desc">PostToolUse: injects content-rule reminders when the guide or project docs are edited.</span></div>
+                <div class="filecard"><code class="fileref" data-path="scripts/hooks/stop.cjs">scripts/hooks/stop.cjs</code><span class="filecard-desc">Stop: surfaces uncommitted files and nudges to update docs/ if source changed without them.</span></div>
+                <div class="filecard"><code class="fileref" data-path="scripts/hooks/stop-memory.cjs">scripts/hooks/stop-memory.cjs</code><span class="filecard-desc">Stop: emits a memory-review prompt suggesting which learnings to persist.</span></div>
+              </div>
+
+              <h3 class="anchor">.codex/ and .agents/ — Codex-side wiring</h3>
+              <div class="filelist">
+                <div class="filecard"><code class="fileref" data-path=".codex/hooks.json">.codex/hooks.json</code><span class="filecard-desc">Registers the four shared <code>.cjs</code> hooks against PreToolUse / PostToolUse / Stop events.</span></div>
+                <div class="filecard"><code class="fileref" data-path=".codex/commands/review.md">.codex/commands/review.md</code><span class="filecard-desc"><code>/review</code> — content accuracy/fairness/completeness audit protocol.</span></div>
+                <div class="filecard"><code class="fileref" data-path=".codex/commands/pre-commit.md">.codex/commands/pre-commit.md</code><span class="filecard-desc"><code>/pre-commit</code> — read-only pre-commit audit producing a READY / NOT READY verdict.</span></div>
+                <div class="filecard"><code class="fileref" data-path=".agents/skills/phase-awareness/SKILL.md">.agents/skills/phase-awareness/SKILL.md</code><span class="filecard-desc">Phase-awareness skill: orients the agent to Phase 1 scope and blocks phase-crossing requests.</span></div>
+              </div>
+
+              <h3 class="anchor">.github/</h3>
+              <div class="filelist">
+                <div class="filecard"><code class="fileref" data-path=".github/workflows/release.yml">.github/workflows/release.yml</code><span class="filecard-desc">Manual Release workflow: bump version, commit, tag, push.</span></div>
+              </div>
+
+              <div class="callout warn">
+                <div class="callout-title">Watch out — claimed but absent</div>
+                <div class="callout-body">The inventories in <code class="fileref" data-path="README.md">README.md</code>, <code class="fileref" data-path="CLAUDE.md">CLAUDE.md</code>, and <code class="fileref" data-path="AGENTS.md">AGENTS.md</code> list a <code>.claude/</code> tree (settings.json + commands/ + skills/). That directory is <strong>not tracked</strong> — <code>.gitignore</code> excludes <code>.claude/</code> entirely. The functional equivalents live under <code>.codex/</code>, <code>.agents/</code>, and <code>scripts/hooks/</code>. Treat the printed trees in those files as aspirational, not authoritative.</div>
+              </div>
+            </div>
+          </details>
+        </section>
+
+        <section class="doc-section" id="guide">
+          <details>
+            <summary><span class="sec-num">6</span><h2>The practice guide (primary deliverable)</h2><span class="chevron"></span></summary>
+            <div class="sec-body">
+              <p class="lead-in">A single Markdown file, <code class="fileref" data-path="coding-agents-practice-guide.md">coding-agents-practice-guide.md</code>, structured as 27 numbered sections plus a quick-reference appendix. Every section follows the same shape: concept → both agents' implementations → comparative table → (often) a Mermaid diagram and an exercise.</p>
+
+              <h3 class="anchor">Section map</h3>
+              <div class="table-wrap"><table class="doc-table">
+                <thead><tr><th>#</th><th>Section</th><th>What it covers</th><th>Has diagram</th></tr></thead>
+                <tbody>
+                  <tr><td>1</td><td>Architecture Overview</td><td>Both agents' surface topology; conceptual comparison (creator, language, default model, config format, sandbox tech).</td><td>Yes</td></tr>
+                  <tr><td>2</td><td>Installation &amp; Authentication</td><td>Install paths (curl/brew/winget/npm), auth flows, token comparison.</td><td>—</td></tr>
+                  <tr><td>3</td><td>CLI Commands &amp; Flags</td><td>Full command + flag reference for both CLIs.</td><td>—</td></tr>
+                  <tr><td>4</td><td>Interactive Mode &amp; TUI</td><td>REPL features, key bindings, mid-turn injection.</td><td>—</td></tr>
+                  <tr><td>5</td><td>Slash Commands</td><td>Built-in vs. skill-backed vs. custom commands.</td><td>—</td></tr>
+                  <tr><td>6</td><td>Permission &amp; Approval Modes</td><td>Plan/default/auto/bypass vs. read-only/auto/full-access.</td><td>Yes</td></tr>
+                  <tr><td>7</td><td>Instruction Files</td><td>CLAUDE.md vs. AGENTS.md discovery, overrides, size limits.</td><td>Yes</td></tr>
+                  <tr><td>8</td><td>Skills</td><td>Skill anatomy, locations, frontmatter fields, string substitutions.</td><td>Yes</td></tr>
+                  <tr><td>9</td><td>Hooks</td><td>Event sets, config formats, handler types, decision control.</td><td>Yes</td></tr>
+                  <tr><td>10</td><td>Plugins</td><td>Structure, distribution, install/marketplace.</td><td>Yes</td></tr>
+                  <tr><td>11</td><td>MCP</td><td>Server config (stdio/HTTP), tool naming, agent-as-server.</td><td>Yes</td></tr>
+                  <tr><td>12</td><td>Subagents &amp; Agent Teams</td><td>Custom agents, isolation, spawn triggers, frontmatter.</td><td>Yes</td></tr>
+                  <tr><td>13</td><td>Headless Mode</td><td><code>claude -p</code> vs. <code>codex exec</code>; piping; structured output.</td><td>—</td></tr>
+                  <tr><td>14</td><td>Sandboxing &amp; Security</td><td>App-level classifier vs. OS-level Seatbelt/Landlock/bubblewrap.</td><td>Yes</td></tr>
+                  <tr><td>15</td><td>Configuration Files</td><td>JSON settings hierarchy vs. TOML config layers; key fields.</td><td>—</td></tr>
+                  <tr><td>16</td><td>IDE &amp; Editor Integration</td><td>VS Code, Cursor, Windsurf, JetBrains, desktop apps.</td><td>—</td></tr>
+                  <tr><td>17</td><td>CI/CD &amp; GitHub Actions</td><td>Official action vs. script-based; GitLab support.</td><td>—</td></tr>
+                  <tr><td>18</td><td>Cloud &amp; Web Surfaces</td><td>Web UIs, mobile, remote control, teleport, Slack.</td><td>—</td></tr>
+                  <tr><td>19</td><td>Scheduling &amp; Automation</td><td>Cloud/desktop scheduled tasks, <code>/loop</code>, cron.</td><td>—</td></tr>
+                  <tr><td>20</td><td>Models &amp; Effort Levels</td><td>Model lineups, effort tiers.</td><td>—</td></tr>
+                  <tr><td>21</td><td>Context Window Management</td><td>Compaction, skill loading, context inspection.</td><td>—</td></tr>
+                  <tr><td>22</td><td>Checkpointing &amp; Session Mgmt</td><td>Resume/fork/rewind/named sessions.</td><td>—</td></tr>
+                  <tr><td>23</td><td>Agent SDK</td><td>SDK languages, use cases, MCP integration.</td><td>—</td></tr>
+                  <tr><td>24</td><td>Channels &amp; External Events</td><td>Claude Channels (preview); Codex platform integrations.</td><td>Yes</td></tr>
+                  <tr><td>25</td><td>Enterprise &amp; Governance</td><td>Managed config, forced plugins, SSO, audit.</td><td>—</td></tr>
+                  <tr><td>26</td><td>Practice Exercises</td><td>Six applied cross-agent exercises.</td><td>—</td></tr>
+                  <tr><td>27</td><td>Cross-Reference Matrix</td><td>Feature-availability matrix + env-var appendix.</td><td>—</td></tr>
+                </tbody>
+              </table></div>
+
+              <h3 class="anchor">Drill-down: representative sections</h3>
+
+              <details class="sub">
+                <summary>§1 Architecture Overview <span class="sub-tag">guide §1</span></summary>
+                <div class="sub-body">
+                  <p>Frames both agents as the same conceptual loop — <em>read context → plan → use tools → iterate</em> — then differentiates on where they run, how they sandbox, and how they extend. A <code>graph TD</code> shows each agent's surfaces (CLI, IDE extension, web, desktop, Slack) feeding a central engine that fans out to tools, MCP, hooks, skills, plugins, and subagents. The conceptual comparison table is the cleanest single-screen summary in the whole guide.</p>
+                  <div class="filelist">
+                    <div class="filecard"><code class="fileref" data-path="coding-agents-practice-guide.md">coding-agents-practice-guide.md</code><span class="filecard-desc">Lines ~39–87 — architecture diagram + conceptual comparison table.</span></div>
+                  </div>
+                </div>
+              </details>
+
+              <details class="sub">
+                <summary>§9 Hooks <span class="sub-tag">guide §9</span></summary>
+                <div class="sub-body">
+                  <p>The deepest section. It enumerates ~25 Claude Code hook events vs. ~4 Codex events, both config formats (JSON matcher blocks vs. Codex <code>hooks.json</code>), the four handler types (<code>command</code>, <code>http</code>, <code>prompt</code>, <code>agent</code>), and the decision-control table mapping exit codes and JSON fields (<code>permissionDecision</code>, <code>addToConversation</code>, <code>suppressOutput</code>) to behavior. This is the section the repo's own hooks (<code class="fileref dir" data-path="scripts/hooks/">scripts/hooks/</code>) put into practice.</p>
+                  <div class="filelist">
+                    <div class="filecard"><code class="fileref" data-path="coding-agents-practice-guide.md">coding-agents-practice-guide.md</code><span class="filecard-desc">Lines ~478–607 — events table, config formats, handler types, a PostToolUse example.</span></div>
+                  </div>
+                </div>
+              </details>
+
+              <details class="sub">
+                <summary>§27 Cross-Reference Matrix <span class="sub-tag">guide §27</span></summary>
+                <div class="sub-body">
+                  <p>A single ✅/❌ table across ~40 features (terminal CLI, IDE, channels, auto-memory, OS sandbox, execpolicy, web search, budget caps, voice input, computer use, etc.). It is the fastest way to answer "does agent X have feature Y." Followed by an environment-variable appendix for both agents.</p>
+                  <div class="filelist">
+                    <div class="filecard"><code class="fileref" data-path="coding-agents-practice-guide.md">coding-agents-practice-guide.md</code><span class="filecard-desc">Lines ~1128–1196 — feature matrix and env-var quick reference.</span></div>
+                  </div>
+                </div>
+              </details>
+
+              <div class="callout note">
+                <div class="callout-title">Note — version-specific content ages</div>
+                <div class="callout-body">The guide cites specific model names (Claude Sonnet/Opus 4.6, GPT-5.4, GPT-5.3-Codex) and a footer date of April 2026. These are point-in-time accurate per the project's accuracy rules but will drift as both products release. The <code>/review</code> command exists precisely to re-validate such claims against official docs.</div>
+              </div>
+            </div>
+          </details>
+        </section>
+
+        <section class="doc-section" id="harness">
+          <details>
+            <summary><span class="sec-num">7</span><h2>The dual-agent harness (hooks, commands, skills)</h2><span class="chevron"></span></summary>
+            <div class="sec-body">
+              <p class="lead-in">The harness is the only "code" in the repo. It is a worked, self-referential example of the guide's sections 7–9 — and it enforces the project's content and git rules automatically.</p>
+
+              <details class="sub">
+                <summary>Shared hook utilities <span class="sub-tag">scripts/hooks/hookUtils.cjs</span></summary>
+                <div class="sub-body">
+                  <p>The foundation every hook imports. It resolves the project root, reads the JSON payload off stdin, classifies sensitive paths, and provides read-only git helpers. Note the OS-agnostic design: it never relies on <code>$CLAUDE_FILE_PATH</code> or shell tooling — tool data arrives as stdin JSON.</p>
+                  <figure class="code">
+                    <figcaption>scripts/hooks/hookUtils.cjs<span class="lang">javascript</span></figcaption>
+                    <pre><code>const PROJECT_DIR = process.env.CLAUDE_PROJECT_DIR || process.cwd();
+
+function getToolFilePath(payload) {
+  const toolInput = payload.tool_input;
+  if (toolInput &amp;&amp; typeof toolInput === "object") {
+    if (typeof toolInput.file_path === "string") return toolInput.file_path;
+    if (typeof toolInput.path === "string") return toolInput.path;
+  }
+  // ...also checks tool_response.filePath
+}</code></pre>
+                  </figure>
+                  <p>The sensitive-path guard (<code>isSensitivePath</code>) blocks <code>.env</code> / <code>.env.*</code> (except <code>.example</code>/<code>.sample</code>/<code>.template</code>), anything named <code>credentials.*</code> or <code>secrets.*</code>, and key material (<code>.pem</code>, <code>.key</code>, <code>.p12</code>, <code>.pfx</code>, <code>id_rsa</code>, <code>id_ed25519</code>, <code>.tokens/</code>). The <code>gitOutput</code> helper runs git read-only with an injected <code>safe.directory</code> so it works on Windows-mounted paths.</p>
+                  <div class="filelist">
+                    <div class="filecard"><code class="fileref" data-path="scripts/hooks/hookUtils.cjs">scripts/hooks/hookUtils.cjs</code><span class="filecard-desc">171 lines. Its <code>module.exports</code> block exports 13 names — 12 helper functions plus the <code>PROJECT_DIR</code> constant — consumed by the four hook entrypoints.</span></div>
+                  </div>
+                </div>
+              </details>
+
+              <details class="sub">
+                <summary>PreToolUse — sensitive-write guard <span class="sub-tag">scripts/hooks/pre-tool-use.cjs</span></summary>
+                <div class="sub-body">
+                  <p>Reads the payload, extracts the target file, and if it matches <code>isSensitivePath</code> emits a block decision. Otherwise it is a no-op.</p>
+                  <figure class="code">
+                    <figcaption>scripts/hooks/pre-tool-use.cjs<span class="lang">javascript</span></figcaption>
+                    <pre><code>const targetFile = getToolFilePath(payload);
+if (targetFile &amp;&amp; isSensitivePath(targetFile)) {
+  emit({
+    decision: "block",
+    reason: `Refusing to write ${targetFile} — sensitive file. `
+      + `Confirm explicitly with the user before retrying.`,
+  });
+}</code></pre>
+                  </figure>
+                  <p>Registered against the <code>Write|Edit</code> matcher (<code class="fileref" data-path=".codex/hooks.json">.codex/hooks.json</code>) with a 3s timeout. Any error is swallowed (<code>process.exitCode = 0</code>) so a hook bug never blocks legitimate edits.</p>
+                </div>
+              </details>
+
+              <details class="sub">
+                <summary>PostToolUse — content-rule injection <span class="sub-tag">scripts/hooks/post-tool-use.cjs</span></summary>
+                <div class="sub-body">
+                  <p>After any edit, it matches the edited path against a small rule set and injects contextual guidance via <code>hookSpecificOutput.additionalContext</code>. Editing the guide re-states the content rules (verifiability, fairness, no stubs, diagrams); editing AGENTS.md or the master plan re-states the docs-consistency and phase constraints.</p>
+                  <figure class="code">
+                    <figcaption>scripts/hooks/post-tool-use.cjs<span class="lang">javascript</span></figcaption>
+                    <pre><code>const RULES = [
+  { test: (p) =&gt; p.includes("coding-agents-practice-guide"),
+    context: "CONTENT RULES: Every feature claim must be verifiable... "
+      + "Comparative tables must be fair to both agents. No stub sections..." },
+  { test: (p) =&gt; p.endsWith("AGENTS.md") || p.includes("MASTER_PLAN"),
+    context: "PROJECT DOCS: Ensure consistency with docs/status.md and "
+      + "docs/versions.md. Phase constraints must be respected." },
+];</code></pre>
+                  </figure>
+                </div>
+              </details>
+
+              <details class="sub">
+                <summary>Stop hooks — git nudge + memory review <span class="sub-tag">scripts/hooks/stop.cjs · stop-memory.cjs</span></summary>
+                <div class="sub-body">
+                  <p><code>stop.cjs</code> lists uncommitted files via read-only git and emits a <code>systemMessage</code> reminding that the user manages git (so the agent must only <em>suggest</em> a commit message) and that <code>docs/</code> may need updating if source changed without it. <code>stop-memory.cjs</code> emits a separate prompt nudging a memory review at session end — which memory type to use and what is/ isn't worth saving.</p>
+                  <div class="filelist">
+                    <div class="filecard"><code class="fileref" data-path="scripts/hooks/stop.cjs">scripts/hooks/stop.cjs</code><span class="filecard-desc">Uncommitted-files + docs-drift nudge.</span></div>
+                    <div class="filecard"><code class="fileref" data-path="scripts/hooks/stop-memory.cjs">scripts/hooks/stop-memory.cjs</code><span class="filecard-desc">Session-end memory-review prompt.</span></div>
+                  </div>
+                  <div class="callout danger">
+                    <div class="callout-title">Do not</div>
+                    <div class="callout-body">No hook here ever runs a mutating git command. The stop hook deliberately only <em>reports</em> uncommitted state and suggests a message. The user manages git exclusively (<code class="fileref" data-path="CLAUDE.md">CLAUDE.md</code> §5).</div>
+                  </div>
+                </div>
+              </details>
+
+              <details class="sub">
+                <summary>Codex commands — /review and /pre-commit <span class="sub-tag">.codex/commands/</span></summary>
+                <div class="sub-body">
+                  <p><code>/review</code> runs a four-part content audit (accuracy, fairness, completeness, style) over changed files and produces a severity-tagged checklist with a READY / NOT READY verdict — and never auto-fixes. <code>/pre-commit</code> wraps <code>/review</code> plus documentation-state, internal-consistency, Mermaid, and phase-alignment checks into a single verdict table; it is strictly read-only and never stages or commits.</p>
+                  <div class="filelist">
+                    <div class="filecard"><code class="fileref" data-path=".codex/commands/review.md">.codex/commands/review.md</code><span class="filecard-desc">Content accuracy review protocol.</span></div>
+                    <div class="filecard"><code class="fileref" data-path=".codex/commands/pre-commit.md">.codex/commands/pre-commit.md</code><span class="filecard-desc">Read-only pre-commit audit.</span></div>
+                  </div>
+                </div>
+              </details>
+
+              <details class="sub">
+                <summary>phase-awareness skill <span class="sub-tag">.agents/skills/phase-awareness/SKILL.md</span></summary>
+                <div class="sub-body">
+                  <p>Applied at session start and before any content work. It states exactly what Phase 1 IS (writing/refining the guide, diagrams, tables, exercises, docs) and what it is NOT (no Python, notebooks, Streamlit, Docker, launchers, benchmarks). If a request crosses a phase boundary, the skill instructs the agent to name the target phase, refuse to implement it, and suggest noting it in the master plan.</p>
+                  <div class="filelist">
+                    <div class="filecard"><code class="fileref" data-path=".agents/skills/phase-awareness/SKILL.md">.agents/skills/phase-awareness/SKILL.md</code><span class="filecard-desc">Phase-orientation + boundary-enforcement protocol.</span></div>
+                  </div>
+                </div>
+              </details>
+
+              <h3 class="anchor">Codex hook registration</h3>
+              <p>The Codex agent learns about the shared hooks through one JSON file that points at the <code>.cjs</code> entrypoints via <code>node -e require(...)</code>, resolving the path from <code>CLAUDE_PROJECT_DIR</code>:</p>
+              <figure class="code">
+                <figcaption>.codex/hooks.json<span class="lang">json</span></figcaption>
+                <pre><code>{
+  "hooks": {
+    "PreToolUse": [
+      { "matcher": "Write|Edit",
+        "hooks": [{ "type": "command",
+          "command": "node -e \"var p=require('path');require(p.join(process.env.CLAUDE_PROJECT_DIR||process.cwd(),'scripts','hooks','pre-tool-use.cjs'))\"",
+          "timeout": 3000 }] }
+    ],
+    "PostToolUse": [ /* post-tool-use.cjs, matcher Write|Edit */ ],
+    "Stop": [ /* stop.cjs and stop-memory.cjs */ ]
+  }
+}</code></pre>
+              </figure>
+            </div>
+          </details>
+        </section>
+
+        <section class="doc-section" id="instruction-files">
+          <details>
+            <summary><span class="sec-num">8</span><h2>Instruction files: CLAUDE.md &amp; AGENTS.md</h2><span class="chevron"></span></summary>
+            <div class="sec-body">
+              <p class="lead-in">The two instruction files are the project's behavioral contract for agents. They are intentionally near-identical so the repo behaves the same under either agent — the only differences are the agent name and the directory the inventory references (<code>.claude/</code> vs <code>.codex/</code>).</p>
+
+              <p>Both open with a <strong>mandatory-workflow blockquote</strong> demanding a full re-read before every change, then read the master plan, <code>docs/status.md</code>, and <code>docs/versions.md</code>. The body sections are:</p>
+
+              <div class="table-wrap"><table class="doc-table">
+                <thead><tr><th>§</th><th>Section</th><th>What it pins down</th></tr></thead>
+                <tbody>
+                  <tr><td>0</td><td>Critical Context</td><td>This is a reference/practice project, not an app; accuracy is paramount; what the project is NOT.</td></tr>
+                  <tr><td>1</td><td>Project Identity</td><td>Name, location, master-plan filename, audience, covered agents, phase roadmap table.</td></tr>
+                  <tr><td>2</td><td>Phase 1 Constraints</td><td>In-scope (docs, tables, diagrams, exercises) vs. explicitly deferred (Python, notebooks, Docker, launchers).</td></tr>
+                  <tr><td>3</td><td>Content Rules</td><td>Accuracy, fairness, completeness, style — the non-negotiable writing contract.</td></tr>
+                  <tr><td>4</td><td>File Inventory</td><td>Printed tree (note: lists a <code>.claude/</code>/<code>.codex/</code> tree that partly diverges from reality).</td></tr>
+                  <tr><td>5</td><td>Hands Off Git</td><td>Agent never mutates git; reports files changed + suggests a commit message.</td></tr>
+                  <tr><td>6</td><td>Content Verification Protocol</td><td>Check official docs first; cross-reference <code>--help</code>; date-stamp uncertainty.</td></tr>
+                  <tr><td>7</td><td>Versioning</td><td>Semver applied to content; source of truth tracked in <code>docs/versions.md</code>.</td></tr>
+                  <tr><td>8</td><td>Change Policy</td><td>Re-read first; new sections need both agents + table + exercise; update docs.</td></tr>
+                  <tr><td>9</td><td>Testing</td><td>"Testing" = content validation (run <code>/review</code>, verify diagrams/links/tables).</td></tr>
+                  <tr><td>10</td><td>Phase Completion Gate</td><td>The Phase 1 done-checklist.</td></tr>
+                  <tr><td>11</td><td>Phase Transition Strategy</td><td>How Phase 1→2→3 hand off.</td></tr>
+                  <tr><td>12</td><td>Output &amp; Completion Expectations</td><td>End-of-task self-audit (summary, accuracy, fairness, completeness, diagrams, docs, git).</td></tr>
+                  <tr><td>13</td><td>Closing Reminder</td><td>Re-read before the next change.</td></tr>
+                </tbody>
+              </table></div>
+
+              <div class="callout note">
+                <div class="callout-title">Note — a subtle inconsistency</div>
+                <div class="callout-body">§7 of both files says "no <code>pyproject.toml</code> or <code>package.json</code> — this is a documentation project," yet a <code>pyproject.toml</code> now exists and the release workflow treats <em>its</em> <code>version</code> field as the source of truth (not <code>docs/versions.md</code>). Both statements are partly true: <code>docs/versions.md</code> is the human changelog; <code>pyproject.toml</code> is the machine-readable version CI bumps. Worth reconciling in a future edit.</div>
+              </div>
+            </div>
+          </details>
+        </section>
+
+        <section class="doc-section" id="content-rules">
+          <details>
+            <summary><span class="sec-num">9</span><h2>Content rules &amp; quality gates</h2><span class="chevron"></span></summary>
+            <div class="sec-body">
+              <p class="lead-in">Because the product is prose, "correctness" is defined by content rules rather than passing tests. These are the load-bearing constraints every contribution must satisfy.</p>
+
+              <dl class="doc-dl">
+                <dt>Accuracy</dt><dd>Every feature claim must be verifiable against official docs or observed <code>--help</code> output. Uncertain claims are marked <code>(unverified)</code> or <code>(as of [date])</code>. CLI syntax must be copied/tested, never invented. Version-introduced features note their version.</dd>
+                <dt>Fairness</dt><dd>Comparative tables present each agent's actual capabilities — no strawmanning. Feature gaps are stated factually with zero editorial "better/worse" commentary.</dd>
+                <dt>Completeness</dt><dd>Each section should carry concept + both agents' implementations + a comparative table + at least one exercise. No "TBD"/"coming soon" stubs — write it or omit the header.</dd>
+                <dt>Style</dt><dd>Technical, terse, high-signal. Code blocks carry the right language id. Tables (not prose) for comparisons. Blockquotes for warnings.</dd>
+              </dl>
+
+              <h3 class="anchor">The four content quality gates</h3>
+              <div class="table-wrap"><table class="doc-table">
+                <thead><tr><th>Gate</th><th>Meaning</th><th>Enforced by</th></tr></thead>
+                <tbody>
+                  <tr><td>Verifiability</td><td>Every claim traceable to official docs / <code>--help</code>.</td><td><code>/review</code> accuracy audit</td></tr>
+                  <tr><td>Fairness</td><td>Tables show real capabilities, no bias.</td><td><code>/review</code> fairness audit</td></tr>
+                  <tr><td>Completeness</td><td>No stubs, no empty table rows.</td><td><code>/review</code> completeness audit · phase gate</td></tr>
+                  <tr><td>Diagrams</td><td>Mermaid for every architecture/flow concept.</td><td><code>/pre-commit</code> Mermaid check</td></tr>
+                </tbody>
+              </table></div>
+
+              <div class="callout tip">
+                <div class="callout-title">Tip</div>
+                <div class="callout-body">The PostToolUse hook re-injects the content rules every time you touch the guide, so you do not have to remember them — but the authoritative statement lives in <code class="fileref" data-path="docs/CODING_AGENTS_TOOLING_MASTER_PLAN.md">docs/CODING_AGENTS_TOOLING_MASTER_PLAN.md</code> §4 and <code class="fileref" data-path="CLAUDE.md">CLAUDE.md</code> §3.</div>
+              </div>
+            </div>
+          </details>
+        </section>
+
+        <section class="doc-section" id="versioning">
+          <details>
+            <summary><span class="sec-num">10</span><h2>Versioning &amp; release</h2><span class="chevron"></span></summary>
+            <div class="sec-body">
+              <p class="lead-in">Strict semver, applied to <em>content</em>. There are two coupled sources: the human changelog and the machine-readable version field.</p>
+
+              <div class="table-wrap"><table class="doc-table">
+                <thead><tr><th>Bump</th><th>Triggers</th></tr></thead>
+                <tbody>
+                  <tr><td><strong>patch</strong></td><td>Corrections / clarifications to existing content.</td></tr>
+                  <tr><td><strong>minor</strong></td><td>New sections or newly-covered features.</td></tr>
+                  <tr><td><strong>major</strong></td><td>Restructuring the guide or adding a third agent.</td></tr>
+                </tbody>
+              </table></div>
+
+              <ul class="steps">
+                <li>Human changelog: <code class="fileref" data-path="docs/versions.md">docs/versions.md</code> — newest entry on top; currently a single <code>v0.1.0</code>.</li>
+                <li>Machine version: the <code>version</code> field in <code class="fileref" data-path="pyproject.toml">pyproject.toml</code>, bumped only by CI.</li>
+                <li>Release: trigger the GitHub Action with a <code>bump</code> input — it runs <code>uv version --bump</code>, commits, tags <code>vX.Y.Z</code>, and pushes.</li>
+              </ul>
+
+              <div class="callout warn">
+                <div class="callout-title">Watch out — agent must not bump the version</div>
+                <div class="callout-body">The release workflow is the <em>only</em> thing that edits <code>pyproject.toml</code>'s version and creates tags. An agent should update <code>docs/versions.md</code> with the computed next version as a documentation entry, but never touch the version field or run git. (Per the global versioning + git policies.)</div>
+              </div>
+            </div>
+          </details>
+        </section>
+
+        <section class="doc-section" id="run">
+          <details>
+            <summary><span class="sec-num">11</span><h2>How to read / use it</h2><span class="chevron"></span></summary>
+            <div class="sec-body">
+              <p class="lead-in">There is nothing to "run" — the deliverable is read, and the harness activates automatically when an agent opens the repo.</p>
+
+              <h3 class="anchor">Read the guide</h3>
+              <ol class="steps">
+                <li>Open <code class="fileref" data-path="coding-agents-practice-guide.md">coding-agents-practice-guide.md</code> in any Markdown viewer with Mermaid support (GitHub, GitLab, VS Code + Mermaid extension).</li>
+                <li>Jump via the in-file table of contents to the feature you need.</li>
+                <li>Work the exercises in §26; use the §27 matrix to check feature availability across agents.</li>
+              </ol>
+
+              <h3 class="anchor">Launch an agent on this repo</h3>
+              <ol class="steps">
+                <li>Open the repo with Claude Code (<code>claude</code>) or Codex (<code>codex</code>). The instruction file and hooks load automatically.</li>
+                <li>To enable Claude Code agent-teams, launch via <code class="fileref" data-path="claude-teams.sh">claude-teams.sh</code> (macOS/Linux) or <code class="fileref" data-path="claude-teams.bat">claude-teams.bat</code> (Windows) — both export <code>CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1</code> and exec the CLI.</li>
+                <li>Run <code>/review</code> before suggesting a commit; run <code>/pre-commit</code> for the full audit verdict.</li>
+              </ol>
+
+              <div class="callout note">
+                <div class="callout-title">Note — hooks need Node</div>
+                <div class="callout-body">The lifecycle hooks shell out to <code>node</code>. Node must be on PATH for the harness to function under either agent. No other runtime is required for Phase 1.</div>
+              </div>
+
+              <div class="callout warn">
+                <div class="callout-title">Watch out — no launcher loop</div>
+                <div class="callout-body">There is intentionally no <code>run_*.sh</code>/<code>run_*.bat</code> with the <code>[k]/[q]/[v]/[r]</code> Docker shutdown loop the user's other projects use — that pattern is for containerized apps and is explicitly deferred until Phase 2 (<code class="fileref" data-path="CLAUDE.md">CLAUDE.md</code> §2). <code>claude-teams.*</code> are plain exec wrappers, not the launcher contract.</div>
+              </div>
+            </div>
+          </details>
+        </section>
+
+        <section class="doc-section" id="editing">
+          <details>
+            <summary><span class="sec-num">12</span><h2>How to edit / extend it</h2><span class="chevron"></span></summary>
+            <div class="sec-body">
+              <p class="lead-in">Practical, owner-focused recipes. For each common change, this is exactly which files to touch and which rules to respect.</p>
+
+              <details class="sub">
+                <summary>Add or revise a guide section</summary>
+                <div class="sub-body">
+                  <ol class="steps">
+                    <li>Edit <code class="fileref" data-path="coding-agents-practice-guide.md">coding-agents-practice-guide.md</code>. Add the numbered heading, update the in-file Table of Contents at the top, and keep section numbering contiguous.</li>
+                    <li>Satisfy the section shape: concept → both agents' implementations → a comparative table → (where it clarifies) a Mermaid diagram → an exercise. The PostToolUse hook will remind you.</li>
+                    <li>Verify every claim against official docs; mark uncertain ones <code>(unverified)</code>/<code>(as of [date])</code>.</li>
+                    <li>Bump <code class="fileref" data-path="docs/versions.md">docs/versions.md</code> (minor for a new section) and refresh <code class="fileref" data-path="docs/status.md">docs/status.md</code>.</li>
+                    <li>Run <code>/review</code>, then <code>/pre-commit</code>. Suggest a commit message — do not commit.</li>
+                  </ol>
+                </div>
+              </details>
+
+              <details class="sub">
+                <summary>Add a new lifecycle hook</summary>
+                <div class="sub-body">
+                  <ol class="steps">
+                    <li>Create <code>scripts/hooks/&lt;name&gt;.cjs</code> importing helpers from <code class="fileref" data-path="scripts/hooks/hookUtils.cjs">scripts/hooks/hookUtils.cjs</code>. Read the payload with <code>readHookPayload()</code>; emit with <code>emit()</code>.</li>
+                    <li>Register it in <code class="fileref" data-path=".codex/hooks.json">.codex/hooks.json</code> under the correct event, using the <code>node -e require(...)</code> pattern and a timeout.</li>
+                    <li>Keep it OS-agnostic: read tool data from stdin JSON, never from env vars; swallow errors with <code>process.exitCode = 0</code> so a bug can't block edits.</li>
+                  </ol>
+                  <div class="callout danger">
+                    <div class="callout-title">Do not</div>
+                    <div class="callout-body">Do not write hooks in bash/jq/python. The global rule (and this repo's existing hooks) require Node <code>.cjs</code> so they run on Windows cmd.exe and macOS alike. Do not have a hook run a mutating git command.</div>
+                  </div>
+                </div>
+              </details>
+
+              <details class="sub">
+                <summary>Add a Codex slash command</summary>
+                <div class="sub-body">
+                  <ol class="steps">
+                    <li>Create <code>.codex/commands/&lt;name&gt;.md</code> with YAML frontmatter (<code>name</code>, <code>description</code>) and a body of step-by-step instructions.</li>
+                    <li>Start the body with "Before anything else: re-read AGENTS.md, read the master plan, read docs/status.md" — mirroring the existing <code class="fileref" data-path=".codex/commands/review.md">review.md</code> / <code class="fileref" data-path=".codex/commands/pre-commit.md">pre-commit.md</code>.</li>
+                    <li>If it audits, it must be read-only and never stage/commit.</li>
+                  </ol>
+                </div>
+              </details>
+
+              <details class="sub">
+                <summary>Add a skill</summary>
+                <div class="sub-body">
+                  <ol class="steps">
+                    <li>Create <code>.agents/skills/&lt;name&gt;/SKILL.md</code> with frontmatter (<code>name</code>, <code>description</code> that states the trigger condition) and a protocol body — follow <code class="fileref" data-path=".agents/skills/phase-awareness/SKILL.md">phase-awareness/SKILL.md</code> as the template.</li>
+                    <li>Skills enforce invariants proactively; keep them focused on one concern.</li>
+                  </ol>
+                </div>
+              </details>
+
+              <details class="sub">
+                <summary>Cut a release</summary>
+                <div class="sub-body">
+                  <ol class="steps">
+                    <li>On <code>main</code>, trigger the Release workflow (<code class="fileref" data-path=".github/workflows/release.yml">.github/workflows/release.yml</code>) with <code>bump = patch|minor|major</code>.</li>
+                    <li>CI bumps <code>pyproject.toml</code>, commits <code>release: vX.Y.Z</code>, tags, and pushes. Do this yourself — agents do not run it.</li>
+                  </ol>
+                </div>
+              </details>
+
+              <div class="callout tip">
+                <div class="callout-title">Tip — fix the documentation drift first</div>
+                <div class="callout-body">If you do one cleanup, reconcile the stale inventories: update the trees in <code class="fileref" data-path="README.md">README.md</code>, <code class="fileref" data-path="CLAUDE.md">CLAUDE.md</code>, and <code class="fileref" data-path="AGENTS.md">AGENTS.md</code> to reflect the real <code>scripts/hooks/</code>, <code>.codex/</code>, <code>.agents/</code>, <code>.github/</code>, <code>pyproject.toml</code>, and launcher files. That single edit removes the biggest source of confusion for a new contributor.</div>
+              </div>
+            </div>
+          </details>
+        </section>
+
+        <section class="doc-section" id="testing">
+          <details>
+            <summary><span class="sec-num">13</span><h2>Testing &amp; validation</h2><span class="chevron"></span></summary>
+            <div class="sec-body">
+              <p class="lead-in">Phase 1 has no executable product, so "testing" means content validation, not unit tests.</p>
+
+              <ul class="steps">
+                <li>Run <code>/review</code> to audit accuracy, fairness, completeness, and style on changed files (<code class="fileref" data-path=".codex/commands/review.md">.codex/commands/review.md</code>).</li>
+                <li>Verify every Mermaid diagram renders (Mermaid live editor or a Markdown preview).</li>
+                <li>Verify in-file section anchors resolve.</li>
+                <li>Verify every comparative-table row has entries for <em>both</em> agents.</li>
+              </ul>
+
+              <div class="callout note">
+                <div class="callout-title">Note — no test runner, by design</div>
+                <div class="callout-body">There is no pytest/Vitest, no coverage gate, and no test directory in Phase 1 — correct for a documentation project. Test harnesses arrive only with Phase 2/3 executable code. The user's global 100%-coverage rule applies to <em>code</em>, of which there is none here beyond the small hooks.</div>
+              </div>
+            </div>
+          </details>
+        </section>
+
+        <section class="doc-section" id="ci">
+          <details>
+            <summary><span class="sec-num">14</span><h2>CI / release pipeline</h2><span class="chevron"></span></summary>
+            <div class="sec-body">
+              <p class="lead-in">One GitHub Actions workflow, manually triggered, whose only job is the version bump + tag. There is no lint/test/build pipeline because there is no executable product yet.</p>
+
+              <figure class="code">
+                <figcaption>.github/workflows/release.yml<span class="lang">yaml</span></figcaption>
+                <pre><code>on:
+  workflow_dispatch:
+    inputs:
+      bump: { type: choice, options: [patch, minor, major] }
+
+jobs:
+  bump:
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv version --bump "${{ inputs.bump }}"
+      - run: |
+          git commit -m "release: ${version}"
+          git tag "${version}"
+          git push origin main &amp;&amp; git push origin "${version}"</code></pre>
+              </figure>
+
+              <div class="table-wrap"><table class="doc-table">
+                <thead><tr><th>Aspect</th><th>Value</th></tr></thead>
+                <tbody>
+                  <tr><td>Trigger</td><td>Manual (<code>workflow_dispatch</code>) with a <code>bump</code> choice input.</td></tr>
+                  <tr><td>Guard</td><td>Only runs on <code>refs/heads/main</code>.</td></tr>
+                  <tr><td>Tooling</td><td><code>astral-sh/setup-uv@v3</code> + Python 3.13; <code>uv version --bump</code>.</td></tr>
+                  <tr><td>Outputs</td><td>Committed version bump, <code>vX.Y.Z</code> tag, pushed to origin.</td></tr>
+                  <tr><td>CI host</td><td>GitHub (public repo). The user's GitLab-CI default applies to private projects; this one is public.</td></tr>
+                </tbody>
+              </table></div>
+
+              <div class="callout warn">
+                <div class="callout-title">Watch out — README mentions GitLab, repo uses GitHub</div>
+                <div class="callout-body">There is no <code>.gitlab-ci.yml</code> in this repo. The only CI is the GitHub release workflow. Any reference to GitLab CI/CD in this project's docs is about the agents' <em>capabilities</em> (guide §17), not this repo's own pipeline.</div>
+              </div>
+            </div>
+          </details>
+        </section>
+
+        <section class="doc-section" id="roadmap">
+          <details>
+            <summary><span class="sec-num">15</span><h2>Roadmap &amp; phases</h2><span class="chevron"></span></summary>
+            <div class="sec-body">
+              <p class="lead-in">Three phases, strictly sequential. Only Phase 1 is active; Phases 2 and 3 are scoped in the master plan but not started.</p>
+
+              <figure class="diagram">
+                <div class="mermaid">
+gantt
+    title Coding Agents Tooling Roadmap
+    dateFormat YYYY-MM-DD
+    axisFormat %b %Y
+    section Phase 1
+    Curated Reference Documentation :active, p1, 2026-04-11, 60d
+    section Phase 2
+    Interactive Exercises :p2, after p1, 90d
+    section Phase 3
+    Automated Benchmarking :p3, after p2, 90d
+                </div>
+                <div class="mermaid-fallback"><figure class="code"><figcaption>diagram source · mermaid</figcaption><pre><code>gantt
+    title Coding Agents Tooling Roadmap
+    dateFormat YYYY-MM-DD
+    axisFormat %b %Y
+    section Phase 1
+    Curated Reference Documentation :active, p1, 2026-04-11, 60d
+    section Phase 2
+    Interactive Exercises :p2, after p1, 90d
+    section Phase 3
+    Automated Benchmarking :p3, after p2, 90d</code></pre></figure></div>
+                <figcaption>Phase roadmap from the master plan. Source: docs/CODING_AGENTS_TOOLING_MASTER_PLAN.md.</figcaption>
+              </figure>
+
+              <div class="table-wrap"><table class="doc-table">
+                <thead><tr><th>Phase</th><th>Deliverable</th><th>Tentative stack</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr><td>1 — Curated Reference Documentation</td><td>The 27-section Markdown guide + harness.</td><td>Markdown, Mermaid, Node hooks.</td><td><strong>Active</strong></td></tr>
+                  <tr><td>2 — Interactive Exercises &amp; Workshops</td><td>Guided, validated exercises (hooks, skills, MCP, CI, multi-agent).</td><td>Python 3.11+, uv, Jupyter or Streamlit, Docker, pytest.</td><td>Planned</td></tr>
+                  <tr><td>3 — Automated Agent Benchmarking</td><td>CLI that scores both agents on standardized tasks.</td><td>Python 3.11+, FastAPI, Docker, Pydantic rubrics, JSON/Postgres results.</td><td>Planned</td></tr>
+                </tbody>
+              </table></div>
+
+              <h3 class="anchor">Phase 1 completion gate</h3>
+              <p>From <code class="fileref" data-path="CLAUDE.md">CLAUDE.md</code> §10 — Phase 1 is done when: all 27 sections have substantive content; every section has a comparative table and an exercise; all Mermaid diagrams render; the cross-reference matrix is complete; content is reviewed against official docs; <code>docs/status.md</code> + <code>docs/versions.md</code> are current; and README accurately describes the guide.</p>
+
+              <div class="callout note">
+                <div class="callout-title">Note — tentative stacks may not match global defaults</div>
+                <div class="callout-body">The master plan lists "Python 3.11+" and "Jupyter or Streamlit (or both)" for Phase 2 and "FastAPI" for Phase 3 as <em>tentative</em>. The user's global stack mandates Python 3.13+ and FastAPI for any API. Treat the master-plan stack notes as placeholders to be finalized at each phase start, not commitments.</div>
+              </div>
+            </div>
+          </details>
+        </section>
+
+        <section class="doc-section" id="glossary">
+          <details>
+            <summary><span class="sec-num">16</span><h2>Domain glossary</h2><span class="chevron"></span></summary>
+            <div class="sec-body">
+              <p class="lead-in">Terms a newcomer needs to read the guide and the harness fluently.</p>
+
+              <dl class="doc-dl">
+                <dt>Claude Code</dt><dd>Anthropic's terminal-first coding agent (TypeScript/Node). Reads <code>CLAUDE.md</code>, configured via JSON <code>settings.json</code>.</dd>
+                <dt>Codex CLI</dt><dd>OpenAI's coding agent (Rust). Reads <code>AGENTS.md</code>, configured via TOML <code>config.toml</code>; sandboxes at the OS level.</dd>
+                <dt>Instruction file</dt><dd>The Markdown contract an agent reads before working (<code>CLAUDE.md</code> / <code>AGENTS.md</code>). Defines rules, scope, and conventions.</dd>
+                <dt>Hook</dt><dd>A user script invoked at a lifecycle event (PreToolUse, PostToolUse, Stop, …) that can block, inject context, or report.</dd>
+                <dt>Skill</dt><dd>A reusable instruction bundle (<code>SKILL.md</code> + optional scripts/refs) the agent loads on demand or by user command.</dd>
+                <dt>Slash command</dt><dd>A user- or built-in command invoked as <code>/name</code> that runs a defined protocol (e.g. <code>/review</code>).</dd>
+                <dt>MCP</dt><dd>Model Context Protocol — a standard for connecting agents to external tools/data over stdio or HTTP; tools are named <code>mcp__&lt;server&gt;__&lt;tool&gt;</code>.</dd>
+                <dt>Subagent / Agent team</dt><dd>A spawned helper agent (e.g. security review) reporting back to a lead; Claude can isolate each in a git worktree.</dd>
+                <dt>Permission / approval mode</dt><dd>How much autonomy the agent has — Plan/Auto/Bypass (Claude) vs. Read-Only/Auto/Full-Access (Codex).</dd>
+                <dt>Sandbox</dt><dd>The mechanism constraining what the agent can touch — app-level classifier (Claude) vs. OS-level Seatbelt/Landlock/bubblewrap (Codex).</dd>
+                <dt>Headless / exec mode</dt><dd>Non-interactive run for scripting/CI: <code>claude -p</code> vs. <code>codex exec</code>.</dd>
+                <dt>Auto-memory</dt><dd>Claude Code's auto-generated persistent memory file; Codex has no documented equivalent.</dd>
+                <dt>Channels</dt><dd>Claude Code research-preview feature pushing external events (Telegram, Discord, …) into a live session via MCP.</dd>
+                <dt>Phase</dt><dd>This project's staged delivery unit. Phase 1 = docs; Phase 2 = interactive; Phase 3 = benchmarking.</dd>
+              </dl>
+            </div>
+          </details>
+        </section>
+
+        <section class="doc-section" id="file-index">
+          <details>
+            <summary><span class="sec-num">17</span><h2>Key files index</h2><span class="chevron"></span></summary>
+            <div class="sec-body">
+              <p class="lead-in">A single jump-off map of every file that matters.</p>
+
+              <div class="table-wrap"><table class="doc-table">
+                <thead><tr><th>File</th><th>What it's for</th></tr></thead>
+                <tbody>
+                  <tr><td><code class="fileref" data-path="coding-agents-practice-guide.md">coding-agents-practice-guide.md</code></td><td>The deliverable — 27-section comparative guide.</td></tr>
+                  <tr><td><code class="fileref" data-path="CLAUDE.md">CLAUDE.md</code></td><td>Claude Code instruction file: workflow, phase constraints, content rules.</td></tr>
+                  <tr><td><code class="fileref" data-path="AGENTS.md">AGENTS.md</code></td><td>Codex instruction file (twin of CLAUDE.md).</td></tr>
+                  <tr><td><code class="fileref" data-path="README.md">README.md</code></td><td>Human overview, guide TOC, roadmap (some structure claims stale).</td></tr>
+                  <tr><td><code class="fileref" data-path="docs/CODING_AGENTS_TOOLING_MASTER_PLAN.md">docs/CODING_AGENTS_TOOLING_MASTER_PLAN.md</code></td><td>Authoritative master plan: vision, phases, gates, decision log.</td></tr>
+                  <tr><td><code class="fileref" data-path="docs/status.md">docs/status.md</code></td><td>Live state and next actions.</td></tr>
+                  <tr><td><code class="fileref" data-path="docs/versions.md">docs/versions.md</code></td><td>Semver changelog (content versioning).</td></tr>
+                  <tr><td><code class="fileref" data-path="pyproject.toml">pyproject.toml</code></td><td>Version source of truth for the release workflow.</td></tr>
+                  <tr><td><code class="fileref" data-path="scripts/hooks/hookUtils.cjs">scripts/hooks/hookUtils.cjs</code></td><td>Shared hook helpers (stdin payload, sensitive paths, read-only git).</td></tr>
+                  <tr><td><code class="fileref" data-path="scripts/hooks/pre-tool-use.cjs">scripts/hooks/pre-tool-use.cjs</code></td><td>Blocks writes to sensitive files.</td></tr>
+                  <tr><td><code class="fileref" data-path="scripts/hooks/post-tool-use.cjs">scripts/hooks/post-tool-use.cjs</code></td><td>Injects content-rule reminders on edit.</td></tr>
+                  <tr><td><code class="fileref" data-path="scripts/hooks/stop.cjs">scripts/hooks/stop.cjs</code></td><td>Uncommitted-files + docs-drift nudge.</td></tr>
+                  <tr><td><code class="fileref" data-path="scripts/hooks/stop-memory.cjs">scripts/hooks/stop-memory.cjs</code></td><td>Session-end memory-review prompt.</td></tr>
+                  <tr><td><code class="fileref" data-path=".codex/hooks.json">.codex/hooks.json</code></td><td>Codex hook registration for the shared <code>.cjs</code> hooks.</td></tr>
+                  <tr><td><code class="fileref" data-path=".codex/commands/review.md">.codex/commands/review.md</code></td><td><code>/review</code> content-audit protocol.</td></tr>
+                  <tr><td><code class="fileref" data-path=".codex/commands/pre-commit.md">.codex/commands/pre-commit.md</code></td><td><code>/pre-commit</code> read-only audit.</td></tr>
+                  <tr><td><code class="fileref" data-path=".agents/skills/phase-awareness/SKILL.md">.agents/skills/phase-awareness/SKILL.md</code></td><td>Phase-orientation skill.</td></tr>
+                  <tr><td><code class="fileref" data-path=".github/workflows/release.yml">.github/workflows/release.yml</code></td><td>Manual version-bump + tag workflow.</td></tr>
+                  <tr><td><code class="fileref" data-path="claude-teams.sh">claude-teams.sh</code> · <code class="fileref" data-path="claude-teams.bat">claude-teams.bat</code></td><td>Launch Claude Code with agent-teams flag (both OSes).</td></tr>
+                  <tr><td><code class="fileref" data-path=".gitattributes">.gitattributes</code></td><td>Cross-OS line-ending normalization for scripts.</td></tr>
+                  <tr><td><code class="fileref" data-path=".gitignore">.gitignore</code></td><td>Ignore rules (incl. the <code>.claude/</code> state dir).</td></tr>
+                </tbody>
+              </table></div>
+            </div>
+          </details>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <button id="backTop" title="Back to top"><span class="ico"></span></button>
+
+  <footer class="doc-footer">
+    <p>Human-facing documentation for <strong>coding-agents-tooling</strong> · generated 2026-06-07.
+    Styling and behavior are inlined directly into this file — it is fully self-contained and needs no external assets. Re-open after editing source to keep this guide in sync.</p>
+  </footer>
+
+  <script>
+/* ============================================================================
+   doc.js — Shared behavior for every project's PROJECT_DOCUMENTATION.html.
+   Inlined directly into this PROJECT_DOCUMENTATION.html (self-contained; no external script).
+   Responsibilities:
+     - theme (light/dark) with persistence
+     - auto-built table of contents from <section class="doc-section"> + h3 anchors
+     - scroll-spy active highlighting
+     - live full-text section filter (search box)
+     - expand-all / collapse-all
+     - click-to-copy file references and code blocks
+     - scroll progress bar + back-to-top
+     - mermaid diagram rendering (CDN) with graceful source fallback
+     - print = expand everything
+   No build step, no framework. Pure DOM.
+   ============================================================================ */
+(function () {
+  "use strict";
+
+  var THEME_KEY = "projDocTheme";
+
+  /* ---- theme (apply ASAP to avoid flash) ---- */
+  function preferredTheme() {
+    var saved = null;
+    try { saved = localStorage.getItem(THEME_KEY); } catch (e) {}
+    if (saved === "light" || saved === "dark") return saved;
+    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+  function applyTheme(t) {
+    document.documentElement.setAttribute("data-theme", t);
+    var btn = document.getElementById("themeToggle");
+    if (btn) {
+      var ico = btn.querySelector(".ico");
+      if (ico) ico.style.webkitMaskImage = ico.style.maskImage = "var(--icon-" + (t === "dark" ? "sun" : "moon") + ")";
+      btn.setAttribute("aria-label", t === "dark" ? "Switch to light theme" : "Switch to dark theme");
+    }
+  }
+  applyTheme(preferredTheme());
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+
+  function init() {
+    applyTheme(preferredTheme());
+    buildTOC();
+    wireControls();
+    wireFileRefs();
+    wireCodeCopy();
+    wireScrollProgress();
+    wireBackToTop();
+    wireScrollSpy();
+    wirePrint();
+    initMermaid();
+    handleInitialHash();
+  }
+
+  /* ---- slugify ---- */
+  function slug(s) {
+    return s.toLowerCase().trim().replace(/[^\w\s-]/g, "").replace(/\s+/g, "-").replace(/-+/g, "-").slice(0, 60);
+  }
+
+  /* ---- TOC ---- */
+  function buildTOC() {
+    var toc = document.getElementById("docToc");
+    if (!toc) return;
+    var sections = Array.prototype.slice.call(document.querySelectorAll("main .doc-section"));
+    if (!sections.length) return;
+    var ul = document.createElement("ul");
+    var n = 0;
+    sections.forEach(function (sec) {
+      n++;
+      if (!sec.id) sec.id = "sec-" + n;
+      var h2 = sec.querySelector("summary h2");
+      var title = h2 ? h2.textContent.trim() : ("Section " + n);
+      var li = document.createElement("li");
+      var a = document.createElement("a");
+      a.href = "#" + sec.id;
+      a.dataset.target = sec.id;
+      a.innerHTML = '<span class="toc-num">' + n + "</span>" + escapeHTML(title);
+      li.appendChild(a);
+      ul.appendChild(li);
+
+      // nested h3 anchors marked with class "anchor"
+      var subs = sec.querySelectorAll("h3.anchor");
+      Array.prototype.forEach.call(subs, function (h3) {
+        if (!h3.id) h3.id = sec.id + "-" + slug(h3.textContent);
+        var sli = document.createElement("li");
+        var sa = document.createElement("a");
+        sa.href = "#" + h3.id;
+        sa.className = "sub";
+        sa.dataset.target = h3.id;
+        sa.textContent = h3.textContent.trim();
+        sli.appendChild(sa);
+        ul.appendChild(sli);
+      });
+    });
+    toc.appendChild(ul);
+
+    // smooth scroll with header offset, and open target section
+    toc.addEventListener("click", function (e) {
+      var a = e.target.closest("a");
+      if (!a) return;
+      e.preventDefault();
+      var id = a.dataset.target;
+      revealAndScroll(id);
+      history.replaceState(null, "", "#" + id);
+    });
+  }
+
+  function revealAndScroll(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    // open the enclosing section + any parent <details>
+    var d = el.closest("details");
+    while (d) { d.open = true; d = d.parentElement ? d.parentElement.closest("details") : null; }
+    var sec = el.closest(".doc-section") || el;
+    if (sec.querySelector) {
+      var det = sec.querySelector(":scope > details");
+      if (det) det.open = true;
+    }
+    setTimeout(function () {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 30);
+  }
+
+  /* ---- controls (expand/collapse/theme/print/search) ---- */
+  function wireControls() {
+    var expand = document.getElementById("expandAll");
+    var collapse = document.getElementById("collapseAll");
+    var theme = document.getElementById("themeToggle");
+    var print = document.getElementById("printBtn");
+    var search = document.getElementById("docSearch");
+
+    if (expand) expand.addEventListener("click", function () { allDetails().forEach(function (d) { d.open = true; }); });
+    if (collapse) collapse.addEventListener("click", function () {
+      document.querySelectorAll("main .doc-section > details").forEach(function (d) { d.open = false; });
+      document.querySelectorAll("main details.sub").forEach(function (d) { d.open = false; });
+    });
+    if (theme) theme.addEventListener("click", function () {
+      var cur = document.documentElement.getAttribute("data-theme");
+      var next = cur === "dark" ? "light" : "dark";
+      try { localStorage.setItem(THEME_KEY, next); } catch (e) {}
+      applyTheme(next);
+    });
+    if (print) print.addEventListener("click", function () { window.print(); });
+    if (search) wireSearch(search);
+  }
+
+  function allDetails() { return Array.prototype.slice.call(document.querySelectorAll("main details")); }
+
+  /* ---- search / filter ---- */
+  function wireSearch(input) {
+    var countEl = document.querySelector(".search-count");
+    var sections = Array.prototype.slice.call(document.querySelectorAll("main .doc-section"));
+    var tocLinks = Array.prototype.slice.call(document.querySelectorAll("#docToc a"));
+    var debounce;
+    input.addEventListener("input", function () {
+      clearTimeout(debounce);
+      debounce = setTimeout(run, 120);
+    });
+    input.addEventListener("keydown", function (e) { if (e.key === "Escape") { input.value = ""; run(); input.blur(); } });
+
+    function run() {
+      var q = input.value.trim().toLowerCase();
+      var shown = 0;
+      if (!q) {
+        sections.forEach(function (s) { s.classList.remove("filtered-out"); });
+        tocLinks.forEach(function (a) { a.classList.remove("filtered-out"); });
+        if (countEl) countEl.textContent = "";
+        return;
+      }
+      sections.forEach(function (s) {
+        var match = s.textContent.toLowerCase().indexOf(q) !== -1;
+        s.classList.toggle("filtered-out", !match);
+        if (match) {
+          shown++;
+          var det = s.querySelector(":scope > details");
+          if (det) det.open = true;
+        }
+        var link = document.querySelector('#docToc a[data-target="' + s.id + '"]');
+        if (link) link.classList.toggle("filtered-out", !match);
+      });
+      if (countEl) countEl.textContent = shown + (shown === 1 ? " match" : " matches");
+    }
+  }
+
+  /* ---- file references: click to copy path ---- */
+  function wireFileRefs() {
+    document.body.addEventListener("click", function (e) {
+      var ref = e.target.closest("code.fileref");
+      if (!ref) return;
+      var path = ref.getAttribute("data-path") || ref.textContent.trim();
+      copyText(path).then(function () {
+        var old = ref.textContent;
+        ref.classList.add("copied");
+        ref.textContent = "copied: " + path;
+        setTimeout(function () { ref.textContent = old; ref.classList.remove("copied"); }, 1100);
+      });
+    });
+  }
+
+  /* ---- code blocks: copy button ---- */
+  function wireCodeCopy() {
+    document.querySelectorAll("figure.code").forEach(function (fig) {
+      var pre = fig.querySelector("pre");
+      if (!pre) return;
+      var btn = document.createElement("button");
+      btn.className = "btn code-copy";
+      btn.innerHTML = '<span class="ico" style="-webkit-mask:var(--icon-copy) center/contain no-repeat;mask:var(--icon-copy) center/contain no-repeat"></span><span class="label">Copy</span>';
+      btn.addEventListener("click", function () {
+        copyText(pre.innerText).then(function () {
+          var l = btn.querySelector(".label");
+          if (l) { l.textContent = "Copied"; setTimeout(function () { l.textContent = "Copy"; }, 1100); }
+        });
+      });
+      fig.appendChild(btn);
+    });
+  }
+
+  function copyText(t) {
+    if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(t).catch(fallback);
+    return fallback();
+    function fallback() {
+      try {
+        var ta = document.createElement("textarea");
+        ta.value = t; ta.style.position = "fixed"; ta.style.opacity = "0";
+        document.body.appendChild(ta); ta.select(); document.execCommand("copy");
+        document.body.removeChild(ta);
+      } catch (e) {}
+      return Promise.resolve();
+    }
+  }
+
+  /* ---- scroll progress ---- */
+  function wireScrollProgress() {
+    var bar = document.getElementById("scrollProgress");
+    if (!bar) return;
+    function upd() {
+      var h = document.documentElement;
+      var max = h.scrollHeight - h.clientHeight;
+      var pct = max > 0 ? (h.scrollTop / max) * 100 : 0;
+      bar.style.width = pct + "%";
+    }
+    window.addEventListener("scroll", upd, { passive: true });
+    window.addEventListener("resize", upd);
+    upd();
+  }
+
+  /* ---- back to top ---- */
+  function wireBackToTop() {
+    var b = document.getElementById("backTop");
+    if (!b) return;
+    b.addEventListener("click", function () { window.scrollTo({ top: 0, behavior: "smooth" }); });
+    window.addEventListener("scroll", function () {
+      b.classList.toggle("show", window.scrollY > 600);
+    }, { passive: true });
+  }
+
+  /* ---- scroll-spy ---- */
+  function wireScrollSpy() {
+    var links = {};
+    document.querySelectorAll("#docToc a").forEach(function (a) { links[a.dataset.target] = a; });
+    var targets = Array.prototype.slice.call(document.querySelectorAll("main .doc-section, main h3.anchor"));
+    if (!targets.length || !("IntersectionObserver" in window)) return;
+    var visible = new Set();
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) visible.add(en.target.id); else visible.delete(en.target.id);
+      });
+      var best = null, bestTop = Infinity;
+      visible.forEach(function (id) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        var top = el.getBoundingClientRect().top;
+        if (top < bestTop) { bestTop = top; best = id; }
+      });
+      Object.keys(links).forEach(function (id) { links[id].classList.toggle("active", id === best); });
+    }, { rootMargin: "-70px 0px -65% 0px", threshold: 0 });
+    targets.forEach(function (t) { if (t.id) obs.observe(t); });
+  }
+
+  /* ---- print = expand all ---- */
+  function wirePrint() {
+    window.addEventListener("beforeprint", function () { allDetails().forEach(function (d) { d.open = true; }); });
+  }
+
+  /* ---- initial hash ---- */
+  function handleInitialHash() {
+    if (location.hash.length > 1) {
+      var id = decodeURIComponent(location.hash.slice(1));
+      setTimeout(function () { revealAndScroll(id); }, 60);
+    }
+  }
+
+  /* ---- mermaid (CDN, graceful fallback to source) ---- */
+  function initMermaid() {
+    var blocks = document.querySelectorAll(".mermaid");
+    if (!blocks.length) return;
+    // stash source for fallback
+    blocks.forEach(function (b) { if (!b.dataset.src) b.dataset.src = b.textContent; });
+    var theme = document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "default";
+    var s = document.createElement("script");
+    s.type = "module";
+    s.textContent =
+      'import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";' +
+      'mermaid.initialize({ startOnLoad: false, theme: "' + theme + '", securityLevel: "loose", flowchart:{useMaxWidth:true}, themeVariables:{ fontFamily: "inherit" } });' +
+      'try { await mermaid.run({ querySelector: ".mermaid" }); }' +
+      'catch (e) { document.querySelectorAll(".mermaid").forEach(function(b){ var f=b.closest("figure.diagram"); if(f) f.classList.add("failed"); }); }';
+    s.onerror = mermaidFail;
+    document.body.appendChild(s);
+    // safety net: if CDN blocked, reveal fallbacks after a delay
+    setTimeout(function () {
+      document.querySelectorAll(".mermaid").forEach(function (b) {
+        if (!b.querySelector("svg")) { var f = b.closest("figure.diagram"); if (f) f.classList.add("failed"); }
+      });
+    }, 4000);
+  }
+  function mermaidFail() {
+    document.querySelectorAll("figure.diagram").forEach(function (f) { f.classList.add("failed"); });
+  }
+
+  function escapeHTML(s) { var d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+})();
+
+  </script>
+</body>
+</html>
