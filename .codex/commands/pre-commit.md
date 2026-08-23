@@ -31,7 +31,12 @@ Run the full `/review` protocol on all changed files (`git diff` + `git diff --c
 - Do all Mermaid code blocks have valid syntax?
 - Are there sections discussing architecture or flow that lack diagrams?
 
-### 5. Phase Alignment
+### 5. SAST
+- Run `semgrep scan --config auto --error .` and `gitleaks detect --no-git --redact` from the repo root (there is no CI `sast` stage yet — local parity is the gate)
+- Zero HIGH/CRITICAL findings; any MEDIUM finding has a written justification in the notes column
+- Every touched input boundary (hook stdin, workflow inputs, launcher args, instruction/guide text quoted from third parties) names its injection class and defense in `AGENTS.md` `<security>`; new boundaries are added there
+
+### 6. Phase Alignment
 - Do the changes stay within Phase 1 scope (documentation only)?
 - No executable code added (Python, JS, etc.) outside of code examples in the guide?
 - No Docker/launcher files added prematurely?
@@ -47,6 +52,7 @@ Run the full `/review` protocol on all changed files (`git diff` + `git diff --c
 | Documentation state | PASS/FAIL | ... |
 | Internal consistency | PASS/FAIL | ... |
 | Mermaid diagrams | PASS/FAIL | ... |
+| SAST | PASS/FAIL | ... |
 | Phase alignment | PASS/FAIL | ... |
 
 ### Verdict: READY TO COMMIT / NOT READY

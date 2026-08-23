@@ -36,6 +36,8 @@ Before declaring Phase 1 complete:
 4. Cross-reference matrix is complete
 5. Content verified against official docs
 6. docs/status.md and docs/versions.md are current
+7. SAST stage green — zero HIGH/CRITICAL findings; MEDIUM findings triaged with written justification (local `semgrep` + `gitleaks` until the first CI pipeline)
+8. New input boundaries in this phase are injection-safe and documented in `AGENTS.md` `<security>`
 
 ### If a Request Crosses Phase Boundaries
 1. Identify which phase the request belongs to
