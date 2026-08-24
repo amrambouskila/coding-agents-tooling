@@ -6,6 +6,11 @@
 
 ## v0.1.2
 
+### CI hardening + dependency remediation (2026-08-24)
+
+- **Release workflow hardened against script injection.** `${{ inputs.bump }}` and `${{ steps.bump.outputs.new_version }}` were interpolated directly into `run:` blocks, where the value becomes shell code. Both now pass through `env:` and are read as quoted shell variables. The input is `type: choice`, so this was not exploitable today — it is the pattern that breaks the moment the input type changes.
+
+
 Security documentation added — no content or code changes.
 
 - **Instruction files**: `<security>` section in `CLAUDE.md` / `AGENTS.md` — SAST stage requirement (`sast` between `lint` and `test` in the first CI pipeline; GitHub CodeQL + Semgrep + gitleaks + `pip-audit` + Trivy tool set), input-boundary inventory (hook stdin payloads, `CLAUDE_PROJECT_DIR`, release workflow inputs, `claude-teams.{sh,bat}`, instruction files as LLM context, planned Phase 2/3 runners), injection-class defenses per boundary; Security check added to the self-audit; two security lines added to the Phase 1 completion gate

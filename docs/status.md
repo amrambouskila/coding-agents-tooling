@@ -14,6 +14,12 @@ Project scaffolding complete. The primary deliverable — `coding-agents-practic
 
 ## Security
 
+### Verified state (2026-08-24)
+
+- **Semgrep: clean.** Verified locally by running this repo's own CI command against the working tree (0 findings). The invocation itself was broken before today — `semgrep ci` rejects `--severity`/`--error` and exited 2 without scanning.
+
+- Not run locally: gitleaks and Trivy are not part of any project toolchain here; both were exercised through their official images during verification, and CI runs them on every pipeline.
+
 Security requirements are documented, not yet wired — **because there is nothing to wire them into yet.** This repo has no CI pipeline: `.github/workflows/` holds only the manual `release.yml` bump workflow, there is no `.github/workflows/ci.yml`, no executable Python (`pyproject.toml` carries the version field and no `[tool.ruff]` block), and no Dockerfile. A `sast` stage requires a pipeline to live in, ruff `S` requires Python source, and Trivy requires an image. This is a structural gap, not a skipped task. `CLAUDE.md` / `AGENTS.md` `<security>` holds the authoritative input-boundary inventory and injection-class defenses; the master plan carries the SAST gate lines on every phase. Local parity runs today: `semgrep scan --config auto --error .` + `gitleaks detect --no-git --redact`.
 
 Next security tasks (all documented requirements; each is blocked on the artifact it would scan):
